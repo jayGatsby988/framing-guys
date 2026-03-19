@@ -130,6 +130,39 @@ function applyStyles(state) {
   if (state.colorFilter && state.colorFilter !== 'none') {
     css += `html { filter: ${colorFilters[state.colorFilter]} !important; }\n`;
   }
+  // Reading guide — horizontal ruler that follows cursor
+  if (state.readingGuide) {
+    css += `
+      #aura-reading-guide {
+        display: block !important;
+      }
+    `;
+  }
+  // Highlight all links
+  if (state.highlightLinks) {
+    css += `
+      a, a * {
+        background: rgba(99,102,241,0.15) !important;
+        outline: 2px solid rgba(99,102,241,0.4) !important;
+        outline-offset: 1px !important;
+        border-radius: 2px !important;
+        text-decoration: underline !important;
+      }
+      a:visited, a:visited * {
+        background: rgba(168,85,247,0.15) !important;
+        outline-color: rgba(168,85,247,0.4) !important;
+      }
+    `;
+  }
+  // Select-to-speak: highlight selected text with a speak cursor
+  if (state.selectTTS) {
+    css += `
+      ::selection {
+        background: rgba(236,72,153,0.3) !important;
+        color: inherit !important;
+      }
+    `;
+  }
   if (state.simplify) {
     css += `
       header, footer, nav, aside, [role="banner"], [role="navigation"], [role="complementary"],
@@ -733,9 +766,144 @@ function saveAndApply() {
 }
 
 
+// === Reading Guide ===
+const READING_GUIDE_ID = 'aura-reading-guide';
+
+function createReadingGuide() {
+  if (document.getElementById(READING_GUIDE_ID)) return;
+  const guide = document.createElement('div');
+  guide.id = READING_GUIDE_ID;
+  guide.style.cssText = `
+    position: fixed; left: 0; right: 0; height: 3px; pointer-events: none;
+    z-index: 2147483640; display: none;
+    background: linear-gradient(90deg, transparent, rgba(99,102,241,0.6) 10%, rgba(99,102,241,0.6) 90%, transparent);
+    box-shadow: 0 0 12px rgba(99,102,241,0.3);
+    transition: top 0.05s ease-out;
+  `;
+  document.body.appendChild(guide);
+  document.addEventListener('mousemove', (e) => {
+    guide.style.top = e.clientY + 'px';
+  });
+}
+
+function removeReadingGuide() {
+  const el = document.getElementById(READING_GUIDE_ID);
+  if (el) el.remove();
+}
+
+// === Page Summarizer ===
+const SUMMARY_OVERLAY_ID = 'aura-summary-overlay';
+
+function showPageSummary() {
+  if (document.getElementById(SUMMARY_OVERLAY_ID)) {
+    document.getElementById(SUMMARY_OVERLAY_ID).remove();
+    return;
+  }
+  const main = document.querySelector('main, article, [role="main"], .content, .post') || document.body;
+  const text = (main.innerText || main.textContent || '').substring(0, 5000).trim();
+  if (!text) return;
+
+  // Extract key info
+  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 20);
+  const topSentences = sentences.slice(0, 5).map(s => s.trim());
+
+  // Get page title and headings
+  const title = document.title || 'This Page';
+  const headings = [...document.querySelectorAll('h1, h2, h3')].slice(0, 8).map(h => h.textContent.trim()).filter(Boolean);
+
+  const overlay = document.createElement('div');
+  overlay.id = SUMMARY_OVERLAY_ID;
+  overlay.innerHTML = `
+    <div style="
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      max-width: 500px; width: 90%; max-height: 70vh; overflow-y: auto;
+      z-index: 2147483647; background: #0C0C14; backdrop-filter: blur(20px);
+      border: 1px solid rgba(99,102,241,0.2); border-radius: 20px;
+      padding: 24px; color: white; font-family: -apple-system, sans-serif;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    ">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#6366F1,#8B5CF6);display:flex;align-items:center;justify-content:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <span style="font-weight:700;font-size:14px;color:#818CF8;">Page Summary</span>
+        </div>
+        <button id="aura-summary-close" style="background:none;border:none;color:rgba(255,255,255,0.3);cursor:pointer;font-size:18px;padding:4px;">&times;</button>
+      </div>
+      <h3 style="font-size:15px;color:rgba(255,255,255,0.9);margin-bottom:12px;line-height:1.4;">${title}</h3>
+      ${headings.length > 0 ? `
+        <div style="margin-bottom:12px;">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:rgba(255,255,255,0.3);margin-bottom:6px;">Sections</div>
+          ${headings.map(h => `<div style="font-size:12px;color:rgba(255,255,255,0.5);padding:3px 0;border-left:2px solid rgba(99,102,241,0.3);padding-left:8px;margin-bottom:2px;">${h}</div>`).join('')}
+        </div>
+      ` : ''}
+      <div style="margin-bottom:8px;">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:rgba(255,255,255,0.3);margin-bottom:6px;">Key Points</div>
+        ${topSentences.map(s => `<div style="font-size:12px;color:rgba(255,255,255,0.6);line-height:1.5;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03);">${s}.</div>`).join('')}
+      </div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:12px;text-align:center;">~${text.split(/\s+/).length} words on this page</div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  // Close on click outside or close button
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+  document.getElementById('aura-summary-close').addEventListener('click', () => overlay.remove());
+}
+
+// === Select-to-Speak ===
+function setupSelectTTS() {
+  document.addEventListener('mouseup', handleSelectTTS);
+}
+
+function removeSelectTTS() {
+  document.removeEventListener('mouseup', handleSelectTTS);
+  const btn = document.getElementById('aura-speak-btn');
+  if (btn) btn.remove();
+}
+
+function handleSelectTTS() {
+  const old = document.getElementById('aura-speak-btn');
+  if (old) old.remove();
+
+  if (!_currentState?.selectTTS || !_currentState?.enabled) return;
+
+  const sel = window.getSelection();
+  const text = sel?.toString().trim();
+  if (!text || text.length < 2) return;
+
+  const range = sel.getRangeAt(0);
+  const rect = range.getBoundingClientRect();
+
+  const btn = document.createElement('button');
+  btn.id = 'aura-speak-btn';
+  btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
+  btn.style.cssText = `
+    position: fixed; z-index: 2147483647;
+    top: ${rect.top - 36}px; left: ${rect.left + rect.width / 2 - 16}px;
+    width: 32px; height: 32px; border-radius: 10px;
+    background: linear-gradient(135deg, #6366F1, #8B5CF6);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(99,102,241,0.4);
+    animation: aura-panel-in 0.15s ease;
+  `;
+  btn.addEventListener('click', () => {
+    chrome.runtime.sendMessage({ type: 'AURA_TTS', text: text.substring(0, 5000) });
+    btn.remove();
+  });
+  document.body.appendChild(btn);
+
+  // Remove after 5 seconds
+  setTimeout(() => { if (btn.parentElement) btn.remove(); }, 5000);
+}
+
 // === Message Listener ===
 chrome.runtime.onMessage.addListener((message) => {
   if (message.type === 'AURA_UPDATE') {
+    const prev = _currentState;
     _currentState = message.state;
     applyStyles(message.state);
     updateFABDot();
@@ -746,6 +914,20 @@ chrome.runtime.onMessage.addListener((message) => {
     } else {
       removeCaptionOverlay();
     }
+
+    // Reading guide
+    if (message.state.readingGuide && message.state.enabled) {
+      createReadingGuide();
+    } else {
+      removeReadingGuide();
+    }
+
+    // Select-to-speak
+    if (message.state.selectTTS && message.state.enabled) {
+      setupSelectTTS();
+    } else {
+      removeSelectTTS();
+    }
   }
 
   if (message.type === 'AURA_READ_ALOUD') {
@@ -754,6 +936,10 @@ chrome.runtime.onMessage.addListener((message) => {
 
   if (message.type === 'AURA_STOP_READING') {
     // TTS is stopped via background script
+  }
+
+  if (message.type === 'AURA_SUMMARIZE') {
+    showPageSummary();
   }
 });
 
@@ -764,11 +950,14 @@ chrome.storage.local.get('auraState', (result) => {
     highContrast: false, dyslexiaFont: false, reducedMotion: false,
     largeCursor: false, focusHighlight: false, hideImages: false,
     colorFilter: 'none', readAloud: false, simplify: false, captions: false,
+    readingGuide: false, highlightLinks: false, selectTTS: false,
   };
 
   if (_currentState.enabled) {
     applyStyles(_currentState);
     if (_currentState.captions) createCaptionOverlay();
+    if (_currentState.readingGuide) createReadingGuide();
+    if (_currentState.selectTTS) setupSelectTTS();
   }
 
   // Create the floating button on every page

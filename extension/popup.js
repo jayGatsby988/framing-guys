@@ -14,6 +14,9 @@ const defaults = {
   readAloud: false,
   simplify: false,
   captions: false,
+  readingGuide: false,
+  highlightLinks: false,
+  selectTTS: false,
 };
 
 const fontSizeSteps = [80, 90, 100, 110, 120, 130, 150, 175, 200];
@@ -21,6 +24,9 @@ const lineHeightLabels = ['Tight', 'Normal', 'Relaxed', 'Loose', 'Extra'];
 const lineHeightValues = [1.2, 1.5, 1.8, 2.2, 2.6];
 const letterSpacingLabels = ['Normal', '+1px', '+2px', '+3px', '+4px'];
 const letterSpacingValues = [0, 1, 2, 3, 4];
+
+// Dashboard URL — update this to your deployed site
+const DASHBOARD_URL = 'https://aura-accessibility.vercel.app/dashboard';
 
 let state = { ...defaults };
 
@@ -71,6 +77,9 @@ function render() {
   document.getElementById('btn-read-aloud').classList.toggle('active', state.readAloud);
   document.getElementById('btn-simplify').classList.toggle('active', state.simplify);
   document.getElementById('btn-captions').classList.toggle('active', state.captions);
+  document.getElementById('btn-reading-guide').classList.toggle('active', state.readingGuide);
+  document.getElementById('btn-highlight-links').classList.toggle('active', state.highlightLinks);
+  document.getElementById('btn-text-select').classList.toggle('active', state.selectTTS);
 }
 
 function setToggle(id, value) {
@@ -178,9 +187,39 @@ document.getElementById('btn-captions').addEventListener('click', () => {
   render();
 });
 
+// Reading Guide
+document.getElementById('btn-reading-guide').addEventListener('click', () => {
+  state.readingGuide = !state.readingGuide;
+  save();
+  render();
+});
+
+// Summarize Page
+document.getElementById('btn-summarize').addEventListener('click', () => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs[0]?.id) {
+      chrome.tabs.sendMessage(tabs[0].id, { type: 'AURA_SUMMARIZE' });
+    }
+  });
+});
+
+// Highlight Links
+document.getElementById('btn-highlight-links').addEventListener('click', () => {
+  state.highlightLinks = !state.highlightLinks;
+  save();
+  render();
+});
+
+// Select Text to Speech
+document.getElementById('btn-text-select').addEventListener('click', () => {
+  state.selectTTS = !state.selectTTS;
+  save();
+  render();
+});
+
 // Dashboard - open in new tab
 document.getElementById('btn-dashboard').addEventListener('click', () => {
-  chrome.tabs.create({ url: 'http://localhost:3000/dashboard' });
+  chrome.tabs.create({ url: DASHBOARD_URL });
 });
 
 // Reset

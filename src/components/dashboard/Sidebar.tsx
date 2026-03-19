@@ -1,13 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Dispatch, SetStateAction } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Eye, Mic, MessageSquare, Volume2, Accessibility, Settings,
-  LayoutDashboard, ChevronLeft, ChevronRight, Sparkles, Menu, X, Camera
+  LayoutDashboard, ChevronLeft, ChevronRight, Sparkles, Menu, X, Camera, LogOut, BookOpen
 } from 'lucide-react'
+import { createSupabaseBrowser } from '@/lib/supabase-browser'
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', color: '#6366F1' },
@@ -15,15 +16,28 @@ const navItems = [
   { href: '/dashboard/captions', icon: Mic, label: 'Live Captions', color: '#EC4899' },
   { href: '/dashboard/chat', icon: MessageSquare, label: 'AI Assistant', color: '#6366F1' },
   { href: '/dashboard/audio', icon: Volume2, label: 'Audio Tools', color: '#14B8A6' },
+  { href: '/dashboard/notes', icon: BookOpen, label: 'Lecture Notes', color: '#10B981' },
   { href: '/dashboard/live', icon: Camera, label: 'Live Camera', color: '#EF4444' },
   { href: '/dashboard/accessibility', icon: Accessibility, label: 'Accessibility', color: '#F59E0B' },
   { href: '/dashboard/settings', icon: Settings, label: 'Settings', color: '#64748B' },
 ]
 
-export default function Sidebar() {
+interface SidebarProps {
+  collapsed: boolean
+  setCollapsed: Dispatch<SetStateAction<boolean>>
+}
+
+export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
   const pathname = usePathname()
-  const [collapsed, setCollapsed] = useState(false)
+  const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
+
+  async function handleLogout() {
+    const supabase = createSupabaseBrowser()
+    await supabase.auth.signOut()
+    router.push('/login')
+    router.refresh()
+  }
 
   const isActive = (href: string) => {
     if (href === '/dashboard') return pathname === '/dashboard'
@@ -98,15 +112,15 @@ export default function Sidebar() {
         </button>
       </div>
 
-      {/* Back to landing */}
+      {/* Logout */}
       <div className="border-t border-white/5 p-3">
-        <Link
-          href="/"
-          className="flex items-center justify-center gap-2 py-2 rounded-lg text-white/30 hover:text-white/50 transition-colors text-xs"
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center justify-center gap-2 py-2 rounded-lg text-red-400/70 hover:text-red-400 hover:bg-red-500/10 transition-colors text-xs"
         >
-          {!collapsed && <span>&larr; Back to Homepage</span>}
-          {collapsed && <span>&larr;</span>}
-        </Link>
+          <LogOut className="w-4 h-4" />
+          {!collapsed && <span>Log out</span>}
+        </button>
       </div>
     </div>
   )
