@@ -1,15 +1,28 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+let _supabase: SupabaseClient | null = null
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export function getSupabase(): SupabaseClient {
+  if (!_supabase) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
+    _supabase = createClient(url, key)
+  }
+  return _supabase
+}
+
+// Backwards-compatible export
+export const supabase = new Proxy({} as SupabaseClient, {
+  get(_target, prop) {
+    return (getSupabase() as unknown as Record<string | symbol, unknown>)[prop]
+  },
+})
 
 export const DEFAULT_PROFILE_ID = '00000000-0000-0000-0000-000000000001'
 
 // Helper to log activity
 export async function logActivity(tool: string, action: string, details?: string) {
-  await supabase.from('activity_log').insert({
+  await getSupabase().from('activity_log').insert({
     profile_id: DEFAULT_PROFILE_ID,
     tool,
     action,
@@ -19,7 +32,7 @@ export async function logActivity(tool: string, action: string, details?: string
 
 // Helper to get user preferences
 export async function getPreferences() {
-  const { data } = await supabase
+  const { data } = await getSupabase()
     .from('profiles')
     .select('preferences')
     .eq('id', DEFAULT_PROFILE_ID)
@@ -31,7 +44,7 @@ export async function getPreferences() {
 export async function updatePreferences(prefs: Record<string, unknown> | object) {
   const current = await getPreferences()
   const merged = { ...current, ...prefs }
-  await supabase
+  await getSupabase()
     .from('profiles')
     .update({ preferences: merged, updated_at: new Date().toISOString() })
     .eq('id', DEFAULT_PROFILE_ID)
