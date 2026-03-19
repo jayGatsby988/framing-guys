@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bot, Send, Zap } from "lucide-react";
+import { Bot, Send, Zap, AlertCircle } from "lucide-react";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Badge } from "@/components/ui/Badge";
 import { cn } from "@/lib/utils";
@@ -23,53 +23,6 @@ const initialMessages: Message[] = [
   },
 ];
 
-const responseBank = [
-  {
-    keywords: ["around", "surroundings", "see", "what"],
-    response: "Using your camera, I can see: You're in what appears to be an indoor space. There's a desk ahead, a window to your right with natural light, and a bookshelf on the left wall. The path ahead is clear.",
-  },
-  {
-    keywords: ["read", "page", "content", "website"],
-    response: "I'm reading the current page: \"AURA — Adaptive Universal Responsive Assistant. One intelligent layer for a more accessible world. AURA combines AI vision assistance, real-time captions, voice control...\"",
-  },
-  {
-    keywords: ["navigate", "home", "go to", "scroll"],
-    response: "Navigating to the top of the page. I can also help you jump to any section — just say or type where you'd like to go.",
-  },
-  {
-    keywords: ["summarize", "summary", "brief", "overview"],
-    response: "Here's a summary of this page: AURA is an AI-powered accessibility platform designed for people with vision and hearing impairments. Key features include Vision Assist (AI scene understanding), Live Captions (real-time transcription), Voice Control, and Web Overlay. Currently in early access.",
-  },
-  {
-    keywords: ["hello", "hi", "hey", "greet"],
-    response: "Hello! I'm here to help make your digital and physical world more accessible. You can ask me to describe your surroundings, read content, help navigate, or just have a conversation.",
-  },
-  {
-    keywords: ["help", "what can", "how do", "features", "capabilities"],
-    response: "I can help you with: 🔍 Describing scenes and objects around you • 📖 Reading any text or page content aloud • 🧭 Navigation assistance and guidance • 🎙 Starting live captions for conversations • 🌐 Improving any website's accessibility • 💬 Answering questions about anything. What would you like to try?",
-  },
-  {
-    keywords: ["caption", "transcript", "hear", "speech"],
-    response: "Activating Live Captions. I'll now transcribe speech in real time and display it here. I can also identify different speakers and detect ambient sounds like alarms or doorbells.",
-  },
-  {
-    keywords: ["accessible", "accessibility", "wcag", "standard"],
-    response: "Accessibility is at the core of everything I do. AURA follows WCAG 2.1 AA standards, supporting screen readers, keyboard navigation, reduced motion preferences, and high contrast modes. This website itself is built to be fully accessible.",
-  },
-];
-
-const defaultResponse = "I understand you're looking for help. Could you be more specific? I can describe your surroundings, read content, help navigate, start live captions, or assist with accessibility settings. What would be most helpful right now?";
-
-const getResponse = (input: string): string => {
-  const lower = input.toLowerCase();
-  for (const item of responseBank) {
-    if (item.keywords.some((kw) => lower.includes(kw))) {
-      return item.response;
-    }
-  }
-  return defaultResponse;
-};
-
 const quickPrompts = [
   { icon: "👁", label: "What's around me?" },
   { icon: "📖", label: "Read this page" },
@@ -81,6 +34,7 @@ export function AICompanionDemo() {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -88,8 +42,8 @@ export function AICompanionDemo() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
-  const sendMessage = (text: string) => {
-    if (!text.trim()) return;
+  const sendMessage = async (text: string) => {
+    if (!text.trim() || isTyping) return;
 
     const now = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     const userMsg: Message = {
@@ -99,27 +53,61 @@ export function AICompanionDemo() {
       timestamp: now,
     };
 
-    setMessages((prev) => [...prev, userMsg]);
+    const updatedMessages = [...messages, userMsg];
+    setMessages(updatedMessages);
     setInput("");
     setIsTyping(true);
+    setError(null);
 
-    const delay = 800 + Math.random() * 600;
-    setTimeout(() => {
-      const response = getResponse(text);
-      setIsTyping(false);
+    try {
+      // Build the conversation history for the API (skip the initial greeting's timestamp)
+      const apiMessages = updatedMessages.map((m) => ({
+        role: m.role as "user" | "assistant",
+        content: m.content,
+      }));
+
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: apiMessages }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to get response");
+      }
+
       setMessages((prev) => [
         ...prev,
         {
           id: Date.now() + 1,
           role: "assistant",
-          content: response,
+          content: data.reply,
           timestamp: new Date().toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
           }),
         },
       ]);
-    }, delay);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Something went wrong";
+      setError(msg);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          role: "assistant",
+          content: "I'm having trouble connecting right now. Please try again in a moment.",
+          timestamp: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        },
+      ]);
+    } finally {
+      setIsTyping(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -146,7 +134,7 @@ export function AICompanionDemo() {
         <SectionHeader
           badge="AI Companion"
           title="Your intelligent accessibility assistant"
-          subtitle="Ask AURA anything. Describe scenes, read content, navigate your environment, and get help with any accessibility need — in natural conversation."
+          subtitle="Ask AURA anything. Describe scenes, read content, navigate your environment, and get help with any accessibility need — powered by GPT-4o."
           align="center"
           id="ai-heading"
           className="mb-16"
@@ -169,7 +157,7 @@ export function AICompanionDemo() {
                   <p className="text-sm font-semibold text-[#F8F8FC] leading-none">
                     AURA
                   </p>
-                  <p className="text-[10px] text-[#5A5A6E]">AI Companion</p>
+                  <p className="text-[10px] text-[#5A5A6E]">AI Companion · GPT-4o</p>
                 </div>
                 <Badge variant="success" dot className="text-[10px] ml-auto">
                   Online
@@ -210,7 +198,7 @@ export function AICompanionDemo() {
                       >
                         <p
                           className={cn(
-                            "text-sm leading-relaxed",
+                            "text-sm leading-relaxed whitespace-pre-wrap",
                             msg.role === "assistant"
                               ? "text-[#9898A8]"
                               : "text-white"
@@ -263,6 +251,14 @@ export function AICompanionDemo() {
                     </motion.div>
                   )}
                 </AnimatePresence>
+
+                {error && (
+                  <div className="flex items-center gap-2 text-xs text-amber-400 px-2">
+                    <AlertCircle size={12} />
+                    <span>{error}</span>
+                  </div>
+                )}
+
                 <div ref={messagesEndRef} />
               </div>
 
@@ -272,7 +268,8 @@ export function AICompanionDemo() {
                   <button
                     key={p.label}
                     onClick={() => sendMessage(p.label)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#141418] border border-[#1F1F28] text-xs text-[#9898A8] hover:text-[#F8F8FC] hover:border-indigo-500/30 transition-colors whitespace-nowrap"
+                    disabled={isTyping}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#141418] border border-[#1F1F28] text-xs text-[#9898A8] hover:text-[#F8F8FC] hover:border-indigo-500/30 transition-colors whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed"
                     aria-label={`Quick prompt: ${p.label}`}
                   >
                     <span>{p.icon}</span>

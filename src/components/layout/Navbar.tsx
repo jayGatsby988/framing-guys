@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { Menu, X, Zap } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
@@ -114,6 +115,12 @@ export function Navbar() {
 
             {/* CTA */}
             <div className="hidden lg:flex items-center gap-3">
+              <Link
+                href="/dashboard"
+                className="px-4 py-2 text-sm font-medium text-[#9898A8] hover:text-[#F8F8FC] transition-colors rounded-lg"
+              >
+                Dashboard
+              </Link>
               <Button
                 variant="primary"
                 size="sm"
@@ -184,7 +191,14 @@ export function Navbar() {
                 ))}
               </nav>
 
-              <div className="p-4 border-t border-[#1F1F28]">
+              <div className="p-4 border-t border-[#1F1F28] space-y-2">
+                <Link
+                  href="/dashboard"
+                  className="block w-full text-center px-4 py-3 rounded-xl text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 text-sm font-medium hover:bg-indigo-500/20 transition-colors"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Open Dashboard
+                </Link>
                 <Button
                   variant="primary"
                   size="md"

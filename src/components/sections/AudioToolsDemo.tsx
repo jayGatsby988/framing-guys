@@ -24,13 +24,6 @@ const mockTranscript = `[00:00:00] Welcome to today's podcast episode on digital
 [00:00:48] Host: "And that's where AI vision assistance comes in?"
 [00:00:53] Dr. Chen: "Exactly. AI can describe scenes, read signs, identify people — all in real time."`;
 
-const mockHighlights = [
-  "Over 1 billion people worldwide need assistive technology",
-  "Key gap: real-time environmental awareness for blind users",
-  "AI vision assistance can describe scenes and read signs in real time",
-  "GPS tells where you are, but not what's around you",
-];
-
 const exportFormats = ["TXT", "PDF", "SRT", "DOCX"];
 
 export function AudioToolsDemo() {
@@ -38,6 +31,8 @@ export function AudioToolsDemo() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [hasResult, setHasResult] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [aiAnalysis, setAiAnalysis] = useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDrop = (e: React.DragEvent) => {
@@ -55,13 +50,56 @@ export function AudioToolsDemo() {
     setTimeout(() => {
       setIsProcessing(false);
       setHasResult(true);
+      summarizeTranscript(mockTranscript);
     }, 2000);
+  };
+
+  const summarizeTranscript = async (transcript: string) => {
+    setIsAnalyzing(true);
+    try {
+      const res = await fetch("/api/summarize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ transcript }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to summarize");
+      setAiAnalysis(data.analysis);
+    } catch {
+      setAiAnalysis(null);
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(mockTranscript).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  // Parse AI analysis into highlights
+  const parseHighlights = (analysis: string): string[] => {
+    const lines = analysis.split("\n");
+    const highlights: string[] = [];
+    let inHighlights = false;
+    for (const line of lines) {
+      if (line.includes("HIGHLIGHTS:") || line.includes("KEY") || line.includes("Highlight")) {
+        inHighlights = true;
+        continue;
+      }
+      if (inHighlights && line.startsWith("-")) {
+        highlights.push(line.replace(/^-\s*/, ""));
+      }
+      if (inHighlights && line.includes("ACTION")) break;
+    }
+    return highlights.length > 0 ? highlights : analysis.split("\n").filter(l => l.startsWith("-")).map(l => l.replace(/^-\s*/, ""));
+  };
+
+  const parseSummary = (analysis: string): string => {
+    const match = analysis.match(/SUMMARY:\s*([\s\S]*?)(?=HIGHLIGHTS|KEY|$)/i);
+    return match ? match[1].trim() : analysis.split("\n")[0] || "";
   };
 
   return (
@@ -80,7 +118,7 @@ export function AudioToolsDemo() {
         <SectionHeader
           badge="Audio Tools"
           title="Transform any audio into accessible content"
-          subtitle="Upload audio files, recordings, or podcasts. AURA transcribes, summarizes, and extracts key information — making every sound accessible."
+          subtitle="Upload audio files, recordings, or podcasts. AURA transcribes, summarizes, and extracts key information — powered by AI."
           align="center"
           id="audio-tools-heading"
           className="mb-16"
@@ -196,6 +234,11 @@ export function AudioToolsDemo() {
                       Complete
                     </Badge>
                   )}
+                  {isAnalyzing && (
+                    <Badge variant="accent" className="text-[10px]">
+                      Summarizing...
+                    </Badge>
+                  )}
                 </div>
                 {hasResult && (
                   <button
@@ -239,26 +282,44 @@ export function AudioToolsDemo() {
                     animate={{ opacity: 1 }}
                     className="flex flex-col h-full"
                   >
-                    {/* Highlights */}
-                    <div className="px-4 py-3 border-b border-[#1F1F28]">
-                      <p className="text-xs text-[#5A5A6E] font-medium mb-2">
-                        Key Highlights
-                      </p>
-                      <ul className="space-y-1.5">
-                        {mockHighlights.map((h, i) => (
-                          <motion.li
-                            key={i}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: i * 0.1 }}
-                            className="flex items-start gap-2 text-xs"
-                          >
-                            <span className="text-indigo-400 mt-0.5">•</span>
-                            <span className="text-[#9898A8]">{h}</span>
-                          </motion.li>
-                        ))}
-                      </ul>
-                    </div>
+                    {/* AI Summary */}
+                    {aiAnalysis && (
+                      <div className="px-4 py-3 border-b border-[#1F1F28]">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Sparkles size={12} className="text-indigo-400" />
+                          <p className="text-xs text-indigo-400 font-medium">
+                            AI Summary
+                          </p>
+                        </div>
+                        <p className="text-xs text-[#9898A8] leading-relaxed mb-3">
+                          {parseSummary(aiAnalysis)}
+                        </p>
+                        <p className="text-xs text-[#5A5A6E] font-medium mb-2">
+                          Key Highlights
+                        </p>
+                        <ul className="space-y-1.5">
+                          {parseHighlights(aiAnalysis).map((h, i) => (
+                            <motion.li
+                              key={i}
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: i * 0.1 }}
+                              className="flex items-start gap-2 text-xs"
+                            >
+                              <span className="text-indigo-400 mt-0.5">•</span>
+                              <span className="text-[#9898A8]">{h}</span>
+                            </motion.li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {isAnalyzing && (
+                      <div className="px-4 py-3 border-b border-[#1F1F28] flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full border-2 border-indigo-400 border-t-transparent animate-spin" />
+                        <span className="text-xs text-indigo-400">AI is summarizing the transcript...</span>
+                      </div>
+                    )}
 
                     {/* Transcript */}
                     <div className="flex-1 px-4 py-3 overflow-y-auto max-h-48">
