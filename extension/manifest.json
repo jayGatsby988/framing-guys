@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "AURA — Education Accessibility",
+  "description": "The ultimate browser extension for students with disabilities. Live captions, reading tools, focus mode, quick notes, and full accessibility controls for any educational website.",
+  "version": "2.0.0",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    }
+  },
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "tts"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "css": ["content.css"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
