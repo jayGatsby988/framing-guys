@@ -11,7 +11,7 @@ import {
 import { logActivity } from '@/lib/supabase'
 
 export default function LiveCameraPage() {
-  const [sessionId] = useState(() => Math.random().toString(36).slice(2, 10))
+  const [sessionId] = useState(() => Math.random().toString(36).slice(2, 8))
   const [connected, setConnected] = useState(false)
   const [latestFrame, setLatestFrame] = useState<string | null>(null)
   const [analyzing, setAnalyzing] = useState(false)
@@ -31,7 +31,6 @@ export default function LiveCameraPage() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (typeof window !== 'undefined' ? window.location.origin : '')
   const mobileUrl = `${baseUrl}/live/${sessionId}`
 
-  // FPS counter
   useEffect(() => {
     fpsIntervalRef.current = setInterval(() => {
       setFps(frameCountRef.current)
@@ -40,7 +39,7 @@ export default function LiveCameraPage() {
     return () => { if (fpsIntervalRef.current) clearInterval(fpsIntervalRef.current) }
   }, [])
 
-  // Poll for new frames — fast polling (500ms)
+  // poll for frames the phone is uploading
   useEffect(() => {
     pollRef.current = setInterval(async () => {
       try {
@@ -51,16 +50,13 @@ export default function LiveCameraPage() {
           setFrameAge(data.age)
           setConnected(true)
           frameCountRef.current++
-          // Reset disconnect timer
           if (disconnectTimerRef.current) clearTimeout(disconnectTimerRef.current)
           disconnectTimerRef.current = setTimeout(() => {
             setConnected(false)
             setLatestFrame(null)
           }, 8000)
         }
-      } catch {
-        // Ignore poll errors
-      }
+      } catch { /* noop */ }
     }, 500)
 
     return () => {
@@ -70,7 +66,6 @@ export default function LiveCameraPage() {
     }
   }, [sessionId])
 
-  // Auto-analyze frames
   const analyzeFrame = useCallback(async (frameData: string) => {
     if (analyzing || frameData === lastAnalyzedRef.current) return
     setAnalyzing(true)
@@ -98,7 +93,7 @@ Prioritize safety above all. Be direct. No camera quality comments.`
         setResult(data.description)
         setAnalysisCount(c => c + 1)
 
-        // Send guidance back to phone
+        // forward the guidance line back to the phone
         const guidanceLine = data.description.split('\n').find((l: string) => l.match(/^GUIDANCE:/i))
         if (guidanceLine) {
           fetch('/api/live', {
@@ -108,7 +103,6 @@ Prioritize safety above all. Be direct. No camera quality comments.`
           }).catch(() => {})
         }
 
-        // Auto-speak new results
         if (autoSpeak && typeof window !== 'undefined') {
           window.speechSynthesis.cancel()
           const utterance = new SpeechSynthesisUtterance(data.description)
@@ -118,9 +112,7 @@ Prioritize safety above all. Be direct. No camera quality comments.`
 
         await logActivity('vision', 'Live camera analysis', 'Real-time frame analyzed')
       }
-    } catch {
-      // Silently fail
-    }
+    } catch { /* noop */ }
     setAnalyzing(false)
   }, [analyzing, sessionId, autoSpeak])
 
@@ -150,7 +142,6 @@ Prioritize safety above all. Be direct. No camera quality comments.`
 
   return (
     <div className="space-y-5">
-      {/* Header */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="text-2xl font-bold text-white flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500/30 to-orange-500/20 flex items-center justify-center border border-red-500/20">
@@ -162,14 +153,12 @@ Prioritize safety above all. Be direct. No camera quality comments.`
       </motion.div>
 
       {!connected ? (
-        /* ── QR CODE SCREEN ── */
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           className="bg-[#0B0B0F] border border-white/[0.06] rounded-3xl overflow-hidden"
         >
           <div className="p-8 lg:p-12 flex flex-col items-center text-center">
-            {/* Instructions */}
             <div className="flex items-center gap-3 mb-6">
               {[
                 { icon: Smartphone, text: 'Open phone camera' },
@@ -186,7 +175,6 @@ Prioritize safety above all. Be direct. No camera quality comments.`
               ))}
             </div>
 
-            {/* Big QR Code */}
             <div className="p-6 bg-white rounded-3xl shadow-2xl shadow-indigo-500/10 mb-6">
               <QRCodeSVG
                 value={mobileUrl}
@@ -201,7 +189,6 @@ Prioritize safety above all. Be direct. No camera quality comments.`
               Point your phone camera at this QR code. It will open AURA&apos;s camera page and start streaming automatically.
             </p>
 
-            {/* URL copy */}
             <div className="flex items-center gap-2 mt-2">
               <code className="text-[10px] text-white/15 font-mono break-all">{mobileUrl}</code>
               <button
@@ -213,7 +200,6 @@ Prioritize safety above all. Be direct. No camera quality comments.`
             </div>
           </div>
 
-          {/* Connection status bar */}
           <div className="px-6 py-4 border-t border-white/[0.04] bg-white/[0.01] flex items-center gap-3">
             <div className="flex items-center gap-2">
               <WifiOff className="w-4 h-4 text-white/20" />
@@ -225,11 +211,8 @@ Prioritize safety above all. Be direct. No camera quality comments.`
           </div>
         </motion.div>
       ) : (
-        /* ── LIVE FEED ── */
         <div className="grid lg:grid-cols-5 gap-4">
-          {/* Camera feed — 3 cols */}
           <div className="lg:col-span-3 space-y-3">
-            {/* Status bar */}
             <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-emerald-500/5 border border-emerald-500/20">
               <Wifi className="w-4 h-4 text-emerald-400" />
               <span className="text-sm text-emerald-400 font-medium">Phone connected</span>
@@ -240,7 +223,6 @@ Prioritize safety above all. Be direct. No camera quality comments.`
               </span>
             </div>
 
-            {/* Video feed */}
             <motion.div
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -253,7 +235,6 @@ Prioritize safety above all. Be direct. No camera quality comments.`
                   className="w-full h-full object-cover"
                 />
               )}
-              {/* Overlays */}
               <div className="absolute top-3 left-3 flex items-center gap-2">
                 <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-500/80 backdrop-blur-sm">
                   <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
@@ -270,7 +251,6 @@ Prioritize safety above all. Be direct. No camera quality comments.`
                   <span className="text-[10px] text-white font-semibold">Analyzing frame...</span>
                 </div>
               )}
-              {/* Scan line */}
               {!analyzing && (
                 <div className="absolute inset-0 pointer-events-none overflow-hidden">
                   <div className="absolute w-full h-[2px] bg-gradient-to-r from-transparent via-indigo-400/30 to-transparent animate-scan-line" />
@@ -278,7 +258,6 @@ Prioritize safety above all. Be direct. No camera quality comments.`
               )}
             </motion.div>
 
-            {/* Controls */}
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setAutoAnalyze(!autoAnalyze)}
@@ -313,7 +292,6 @@ Prioritize safety above all. Be direct. No camera quality comments.`
             </div>
           </div>
 
-          {/* Analysis panel — 2 cols */}
           <div className="lg:col-span-2 bg-[#0B0B0F] border border-white/[0.06] rounded-2xl overflow-hidden flex flex-col" style={{ minHeight: 400 }}>
             <div className="px-4 py-3 border-b border-white/[0.04] flex items-center justify-between bg-white/[0.01]">
               <h3 className="text-xs font-semibold text-white/40 uppercase tracking-wider flex items-center gap-2">

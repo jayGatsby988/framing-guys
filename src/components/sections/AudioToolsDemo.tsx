@@ -79,7 +79,6 @@ export function AudioToolsDemo() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // Parse AI analysis into highlights
   const parseHighlights = (analysis: string): string[] => {
     const lines = analysis.split("\n");
     const highlights: string[] = [];

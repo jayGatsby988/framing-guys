@@ -1,5 +1,3 @@
-/* AURA content script — injects accessibility styles and the floating control panel. */
-
 const AURA_ID = 'aura-a11y-styles';
 const AURA_OVERLAY_ID = 'aura-caption-overlay';
 const AURA_FAB_ID = 'aura-fab';

@@ -1,6 +1,3 @@
-/**
- * Dashboard sidebar — responsive nav with mobile drawer and collapsible desktop rail.
- */
 'use client'
 
 import { useState, Dispatch, SetStateAction } from 'react'

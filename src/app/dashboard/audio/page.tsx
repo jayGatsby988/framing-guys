@@ -9,7 +9,6 @@ import {
 import { logActivity } from '@/lib/supabase'
 
 export default function AudioPage() {
-  // TTS State
   const [ttsText, setTtsText] = useState('')
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
@@ -18,12 +17,10 @@ export default function AudioPage() {
   const [rate, setRate] = useState(1)
   const [pitch, setPitch] = useState(1)
 
-  // Summarizer State
   const [summaryInput, setSummaryInput] = useState('')
   const [summary, setSummary] = useState('')
   const [summarizing, setSummarizing] = useState(false)
 
-  // Tab
   const [activeTab, setActiveTab] = useState<'tts' | 'summarize'>('tts')
 
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null)

@@ -1,6 +1,3 @@
-// AURA Background Service Worker
-
-// Handle messages from content script and popup
 chrome.runtime.onMessage.addListener((message, sender) => {
   if (message.type === 'AURA_TTS') {
     chrome.tts.stop();
@@ -16,14 +13,11 @@ chrome.runtime.onMessage.addListener((message, sender) => {
     chrome.tts.stop();
   }
 
-  // When content script updates state, sync to popup if open
   if (message.type === 'AURA_STATE_CHANGED') {
-    // Broadcast to all tabs so popup can pick it up
     chrome.runtime.sendMessage(message).catch(() => {});
   }
 });
 
-// When extension is installed, set default state
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.local.get('auraState', (result) => {
     if (!result.auraState) {

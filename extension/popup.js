@@ -1,5 +1,3 @@
-/* AURA popup — manages extension state and syncs settings with the content script. */
-
 const defaults = {
   enabled: true,
   fontSize: 0,

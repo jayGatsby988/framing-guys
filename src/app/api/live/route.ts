@@ -1,19 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
-// Phone POSTs a frame, or Desktop POSTs guidance
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
 
-    // Phone sending a frame
+    // phone -> server: save frame, return any pending guidance
     if (body.image) {
       const { sessionId, image } = body
       if (!sessionId || !image) {
         return NextResponse.json({ error: 'Missing sessionId or image' }, { status: 400 })
       }
 
-      // Upsert frame into Supabase
       await supabase
         .from('live_sessions')
         .upsert({
@@ -22,7 +20,6 @@ export async function POST(req: NextRequest) {
           frame_updated_at: new Date().toISOString(),
         }, { onConflict: 'session_id' })
 
-      // Return any pending guidance for the phone
       const { data: session } = await supabase
         .from('live_sessions')
         .select('guidance_text, guidance_updated_at')
@@ -40,7 +37,7 @@ export async function POST(req: NextRequest) {
       })
     }
 
-    // Desktop sending guidance text back to phone
+    // desktop -> server: push guidance for the phone to pick up
     if (body.guidance) {
       const { sessionId, guidance: text } = body
       if (!sessionId) {
@@ -64,7 +61,6 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// Desktop GETs the latest frame
 export async function GET(req: NextRequest) {
   const sessionId = req.nextUrl.searchParams.get('sessionId')
   if (!sessionId) {

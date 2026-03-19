@@ -60,7 +60,6 @@ export function AICompanionDemo() {
     setError(null);
 
     try {
-      // Build the conversation history for the API (skip the initial greeting's timestamp)
       const apiMessages = updatedMessages.map((m) => ({
         role: m.role as "user" | "assistant",
         content: m.content,

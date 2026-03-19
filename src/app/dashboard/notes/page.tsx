@@ -1,7 +1,3 @@
-/**
- * Lecture Notes — record lectures with live transcription, take notes side-by-side,
- * and generate summaries. Notes auto-save to Supabase every 5 seconds.
- */
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'

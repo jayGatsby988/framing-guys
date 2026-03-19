@@ -1,6 +1,3 @@
-/**
- * Site footer with product links, social icons, and accessibility commitment.
- */
 "use client";
 
 import React from "react";

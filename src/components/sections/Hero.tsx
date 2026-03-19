@@ -1,7 +1,3 @@
-/**
- * Hero section — main landing area with animated mockups of Lecture Notes and Vision Assist.
- * Rotating content cycles through sample lecture topics and vision analysis results.
- */
 "use client";
 
 import React, { useState, useEffect } from "react";

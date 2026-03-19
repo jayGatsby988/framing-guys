@@ -27,30 +27,25 @@ export default function MobileCameraPage() {
     return () => { stopStreaming() }
   }, [])
 
-  // Auto-start camera on mount
   useEffect(() => {
     if (!autoStarted) {
       setAutoStarted(true)
-      // Small delay to let page render
       const t = setTimeout(() => startCamera(), 500)
       return () => clearTimeout(t)
     }
   }, [autoStarted])
 
-  // Haptic feedback when guidance changes
+  // vibrate on new guidance so the user knows something changed
   useEffect(() => {
     if (guidance && navigator.vibrate) {
       if (hasHazard) {
-        // Strong double vibrate for hazards
         navigator.vibrate([100, 50, 200])
       } else {
-        // Light pulse for normal guidance
         navigator.vibrate(50)
       }
     }
   }, [guidance, hasHazard])
 
-  // Speak guidance
   useEffect(() => {
     if (guidance && typeof window !== 'undefined' && window.speechSynthesis) {
       window.speechSynthesis.cancel()
@@ -90,7 +85,7 @@ export default function MobileCameraPage() {
 
     const video = videoRef.current
     const canvas = canvasRef.current
-    // Capture at 640x480 for fast transfer
+    // 640x480 keeps the payload small enough for fast uploads
     canvas.width = 640
     canvas.height = 480
     const ctx = canvas.getContext('2d')
@@ -107,13 +102,11 @@ export default function MobileCameraPage() {
       const data = await res.json()
       setFramesSent(c => c + 1)
 
-      // Check for guidance from desktop
       if (data.guidance && data.guidanceAge < 15000) {
         const newGuidance = data.guidance
         if (newGuidance !== guidance) {
           setGuidance(newGuidance)
           setGuidanceHistory(prev => [newGuidance, ...prev].slice(0, 5))
-          // Check if hazard related
           const lower = newGuidance.toLowerCase()
           setHasHazard(
             lower.includes('hazard') || lower.includes('careful') ||
@@ -123,14 +116,12 @@ export default function MobileCameraPage() {
           )
         }
       }
-    } catch {
-      // Silently retry next interval
-    }
+    } catch { /* retry next tick */ }
   }, [sessionId, paused, guidance])
 
   function startSending() {
     if (intervalRef.current) clearInterval(intervalRef.current)
-    // Send frames every 500ms (~2 fps network, camera runs at 30fps locally)
+    // ~2 fps over the network, camera itself runs at 30fps locally
     intervalRef.current = setInterval(() => {
       captureAndSend()
     }, 500)
@@ -148,7 +139,6 @@ export default function MobileCameraPage() {
 
   return (
     <div className="min-h-screen bg-[#070709] text-white flex flex-col overflow-hidden" style={{ height: '100dvh' }}>
-      {/* Header - minimal */}
       <div className="px-4 py-2.5 flex items-center justify-between border-b border-white/5 bg-[#0A0A10] flex-shrink-0">
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-lg bg-indigo-500/20 flex items-center justify-center">
@@ -174,7 +164,6 @@ export default function MobileCameraPage() {
         </div>
       </div>
 
-      {/* Camera Feed - full screen */}
       <div className="flex-1 relative bg-black overflow-hidden">
         <video
           ref={videoRef}
@@ -185,7 +174,6 @@ export default function MobileCameraPage() {
           style={{ transform: 'scaleX(1)' }}
         />
 
-        {/* Pre-camera state */}
         {!cameraReady && (
           <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
             {error ? (
@@ -211,10 +199,8 @@ export default function MobileCameraPage() {
           </div>
         )}
 
-        {/* Live overlays */}
         {cameraReady && (
           <>
-            {/* Status badges */}
             <div className="absolute top-3 left-3 flex items-center gap-2">
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-sm">
                 <div className={`w-2 h-2 rounded-full ${paused ? 'bg-amber-400' : 'bg-red-500 animate-pulse'}`} />
@@ -222,14 +208,12 @@ export default function MobileCameraPage() {
               </div>
             </div>
 
-            {/* Scanning effect */}
             {!paused && (
               <div className="absolute inset-0 pointer-events-none overflow-hidden">
                 <div className="absolute w-full h-[2px] bg-gradient-to-r from-transparent via-indigo-400/40 to-transparent" style={{ animation: 'scan-line 2.5s ease-in-out infinite' }} />
               </div>
             )}
 
-            {/* Guidance overlay - bottom of screen, above controls */}
             {guidance && (
               <div
                 ref={guidanceRef}
@@ -281,7 +265,6 @@ export default function MobileCameraPage() {
         )}
       </div>
 
-      {/* Controls - fixed bottom */}
       {cameraReady && (
         <div className="px-4 py-3 border-t border-white/5 bg-[#0A0A10] flex gap-2 flex-shrink-0">
           <button

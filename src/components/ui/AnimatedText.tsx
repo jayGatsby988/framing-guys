@@ -109,7 +109,6 @@ export function AnimatedText({
     );
   }
 
-  // chars
   const chars = text.split("");
   return (
     <Tag className={className}>

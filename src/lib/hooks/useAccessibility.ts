@@ -5,9 +5,9 @@ import { useState, useEffect, useCallback } from "react";
 type ContrastMode = "normal" | "high" | "max";
 
 interface AccessibilitySettings {
-  fontSize: number; // 1-3
+  fontSize: number;
   contrast: ContrastMode;
-  lineSpacing: number; // 1-2 (multiplier)
+  lineSpacing: number;
   reducedMotion: boolean;
   screenReader: boolean;
 }
@@ -34,13 +34,11 @@ const STORAGE_KEY = "aura-accessibility-settings";
 function applySettings(settings: AccessibilitySettings) {
   const root = document.documentElement;
 
-  // Font size scale
   const fontScales = [1, 1.125, 1.25];
   const scale = fontScales[settings.fontSize - 1] || 1;
   root.style.setProperty("--accessibility-font-scale", String(scale));
   root.style.fontSize = `${scale * 16}px`;
 
-  // Contrast
   if (settings.contrast === "max") {
     root.style.setProperty("--text-primary", "#FFFFFF");
     root.style.setProperty("--text-secondary", "#E0E0E0");
@@ -58,11 +56,9 @@ function applySettings(settings: AccessibilitySettings) {
     root.style.removeProperty("--bg-surface");
   }
 
-  // Line spacing
   root.style.setProperty("--accessibility-line-spacing", String(settings.lineSpacing));
   root.style.lineHeight = String(settings.lineSpacing);
 
-  // Reduced motion
   if (settings.reducedMotion) {
     root.style.setProperty("--accessibility-motion", "reduce");
   } else {
@@ -80,18 +76,14 @@ export function useAccessibility(): AccessibilityHook {
         const parsed = JSON.parse(stored);
         setSettings({ ...DEFAULT_SETTINGS, ...parsed });
       }
-    } catch {
-      // ignore
-    }
+    } catch { /* noop */ }
   }, []);
 
   useEffect(() => {
     applySettings(settings);
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-    } catch {
-      // ignore
-    }
+    } catch { /* noop */ }
   }, [settings]);
 
   const setFontSize = useCallback((size: number) => {

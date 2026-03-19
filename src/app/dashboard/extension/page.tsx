@@ -1,7 +1,3 @@
-/**
- * Extension settings — toggle features for the AURA Chrome Extension.
- * Config is persisted to localStorage and broadcast to the extension via postMessage.
- */
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'

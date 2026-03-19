@@ -23,7 +23,6 @@ export function Navbar() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
 
-      // Determine active section
       const sections = navLinks.map((l) => l.href.replace("#", ""));
       for (const id of [...sections].reverse()) {
         const el = document.getElementById(id);

@@ -11,7 +11,7 @@ export function getSupabase(): SupabaseClient {
   return _supabase
 }
 
-// Backwards-compatible export
+// lazy proxy so imports don't blow up when env vars are missing
 export const supabase = new Proxy({} as SupabaseClient, {
   get(_target, prop) {
     return (getSupabase() as unknown as Record<string | symbol, unknown>)[prop]
@@ -20,7 +20,6 @@ export const supabase = new Proxy({} as SupabaseClient, {
 
 export const DEFAULT_PROFILE_ID = '00000000-0000-0000-0000-000000000001'
 
-// Helper to log activity
 export async function logActivity(tool: string, action: string, details?: string) {
   await getSupabase().from('activity_log').insert({
     profile_id: DEFAULT_PROFILE_ID,
@@ -30,7 +29,6 @@ export async function logActivity(tool: string, action: string, details?: string
   })
 }
 
-// Helper to get user preferences
 export async function getPreferences() {
   const { data } = await getSupabase()
     .from('profiles')
@@ -40,7 +38,6 @@ export async function getPreferences() {
   return data?.preferences ?? {}
 }
 
-// Helper to update preferences
 export async function updatePreferences(prefs: Record<string, unknown> | object) {
   const current = await getPreferences()
   const merged = { ...current, ...prefs }

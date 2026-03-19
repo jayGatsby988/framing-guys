@@ -121,7 +121,6 @@ export default function VisionPage() {
       if (data.error) throw new Error(data.error)
       setResult(data.description)
 
-      // Save to Supabase
       await supabase.from('vision_analyses').insert({
         profile_id: DEFAULT_PROFILE_ID,
         description: data.description,

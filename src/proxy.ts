@@ -9,7 +9,6 @@ export async function proxy(request: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-  // Skip auth checks if Supabase is not configured
   if (!url || !key) {
     return response
   }
@@ -34,7 +33,6 @@ export async function proxy(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  // Protected routes — redirect to login if not authenticated
   if (!user && request.nextUrl.pathname.startsWith('/dashboard')) {
     const loginUrl = request.nextUrl.clone()
     loginUrl.pathname = '/login'
@@ -42,7 +40,6 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl)
   }
 
-  // Redirect logged-in users away from login/signup
   if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/signup')) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }

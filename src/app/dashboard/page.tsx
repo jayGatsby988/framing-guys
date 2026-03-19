@@ -1,7 +1,3 @@
-/**
- * Main dashboard console — customizable widget grid with stats, chat, vision, and quick actions.
- * Widget layout persists to localStorage so users keep their preferred arrangement.
- */
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'

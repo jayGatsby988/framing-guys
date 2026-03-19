@@ -57,7 +57,6 @@ export function VisionAssistDemo() {
   const [displayedText, setDisplayedText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
 
-  // Image upload state
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [aiDescription, setAiDescription] = useState<string | null>(null);
@@ -89,7 +88,6 @@ export function VisionAssistDemo() {
 
   const handleRefresh = () => {
     if (uploadedImage) {
-      // Re-analyze the uploaded image
       analyzeImage(uploadedImage);
       return;
     }

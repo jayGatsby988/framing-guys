@@ -101,7 +101,6 @@ export default function ChatPage() {
       const finalMessages: Message[] = [...newMessages, { role: 'assistant', content: reply }]
       setMessages(finalMessages)
 
-      // Save to Supabase
       let convId = activeConv
       if (!convId) {
         const title = content.slice(0, 50) + (content.length > 50 ? '...' : '')

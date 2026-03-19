@@ -1,7 +1,3 @@
-/**
- * Unified settings page — appearance, accessibility, voice, profile, notifications, and privacy.
- * Applies CSS variables in real-time so users can preview changes before saving.
- */
 'use client'
 
 import { useState, useEffect } from 'react'
