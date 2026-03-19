@@ -1,13 +1,10 @@
-// AURA Content Script — injected into every page
-// Applies accessibility modifications based on popup settings
-// Includes floating overlay panel for quick access on any website
+/* AURA content script — injects accessibility styles and the floating control panel. */
 
 const AURA_ID = 'aura-a11y-styles';
 const AURA_OVERLAY_ID = 'aura-caption-overlay';
 const AURA_FAB_ID = 'aura-fab';
 const AURA_PANEL_ID = 'aura-panel';
 
-// Color filter matrices
 const colorFilters = {
   none: '',
   protanopia: 'url(#aura-protanopia)',
@@ -15,7 +12,6 @@ const colorFilters = {
   tritanopia: 'url(#aura-tritanopia)',
 };
 
-// Inject SVG filters for color blindness simulation
 function injectColorFilters() {
   if (document.getElementById('aura-svg-filters')) return;
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -130,7 +126,6 @@ function applyStyles(state) {
   if (state.colorFilter && state.colorFilter !== 'none') {
     css += `html { filter: ${colorFilters[state.colorFilter]} !important; }\n`;
   }
-  // Reading guide — horizontal ruler that follows cursor
   if (state.readingGuide) {
     css += `
       #aura-reading-guide {
@@ -138,7 +133,6 @@ function applyStyles(state) {
       }
     `;
   }
-  // Highlight all links
   if (state.highlightLinks) {
     css += `
       a, a * {
@@ -154,7 +148,6 @@ function applyStyles(state) {
       }
     `;
   }
-  // Select-to-speak: highlight selected text with a speak cursor
   if (state.selectTTS) {
     css += `
       ::selection {
@@ -185,8 +178,6 @@ function applyStyles(state) {
     `;
   }
 
-  // === Education Tools ===
-  // Focus Mode - dim distracting elements
   if (state.focusMode) {
     css += `
       header, footer, nav, aside, [role="banner"], [role="complementary"],
@@ -207,7 +198,6 @@ function applyStyles(state) {
       }
     `;
   }
-  // Highlight Headings - make h1-h6 stand out
   if (state.highlightHeadings) {
     css += `
       h1, h2, h3, h4, h5, h6 {
@@ -219,7 +209,6 @@ function applyStyles(state) {
       }
     `;
   }
-  // Line Ruler - persistent horizontal line that follows scroll position
   if (state.lineRuler) {
     css += `
       #aura-line-ruler {
@@ -231,7 +220,6 @@ function applyStyles(state) {
     removeLineRuler();
   }
 
-  // Don't hide AURA's own elements
   css += `
     #${AURA_FAB_ID}, #${AURA_FAB_ID} *, #${AURA_PANEL_ID}, #${AURA_PANEL_ID} *,
     #${AURA_OVERLAY_ID}, #${AURA_OVERLAY_ID} *, #aura-line-ruler {
@@ -263,7 +251,6 @@ function removeStyles() {
   removeLineRuler();
 }
 
-// === Line Ruler (Education Tool) ===
 function createLineRuler() {
   if (document.getElementById('aura-line-ruler')) return;
   const ruler = document.createElement('div');
@@ -282,7 +269,6 @@ function createLineRuler() {
   `;
   document.body.appendChild(ruler);
 
-  // Follow mouse
   document.addEventListener('mousemove', _auraRulerFollow);
 }
 
@@ -299,7 +285,6 @@ function removeLineRuler() {
   document.removeEventListener('mousemove', _auraRulerFollow);
 }
 
-// === Read Aloud ===
 function readPageAloud() {
   const main = document.querySelector('main, article, [role="main"], .content, .post') || document.body;
   const text = main.innerText || main.textContent || '';
@@ -307,7 +292,6 @@ function readPageAloud() {
   chrome.runtime.sendMessage({ type: 'AURA_TTS', text: trimmed });
 }
 
-// === Live Captions Overlay ===
 function createCaptionOverlay() {
   if (document.getElementById(AURA_OVERLAY_ID)) return;
 
@@ -378,7 +362,7 @@ function startCaptionRecognition() {
 
   recognition.onerror = (event) => {
     if (event.error === 'no-speech') return;
-    console.log('AURA caption error:', event.error);
+    /* noop */
   };
 
   recognition.onend = () => {
@@ -391,11 +375,6 @@ function startCaptionRecognition() {
   window._auraRecognition = recognition;
 }
 
-
-// ═══════════════════════════════════════════════════════════
-// FLOATING ACTION BUTTON + OVERLAY PANEL
-// Provides quick access to all AURA controls on any website
-// ═══════════════════════════════════════════════════════════
 
 let _panelOpen = false;
 let _currentState = null;
@@ -463,7 +442,6 @@ function createFAB() {
     }
   });
 
-  // Show active dot if any settings are active
   updateFABDot();
 }
 
@@ -744,14 +722,12 @@ function bindPanelEvents() {
   const panel = document.getElementById(AURA_PANEL_ID);
   if (!panel) return;
 
-  // Power toggle
   document.getElementById('aura-p-power-btn').addEventListener('click', () => {
     _currentState.enabled = !_currentState.enabled;
     saveAndApply();
     refreshPanel();
   });
 
-  // Quick actions
   panel.querySelectorAll('[data-action]').forEach(btn => {
     btn.addEventListener('click', () => {
       const action = btn.dataset.action;
@@ -776,7 +752,6 @@ function bindPanelEvents() {
     });
   });
 
-  // Steppers
   panel.querySelectorAll('[data-step]').forEach(btn => {
     btn.addEventListener('click', () => {
       const prop = btn.dataset.step;
@@ -793,7 +768,6 @@ function bindPanelEvents() {
     });
   });
 
-  // Toggle switches
   panel.querySelectorAll('[data-toggle]').forEach(btn => {
     btn.addEventListener('click', () => {
       const key = btn.dataset.toggle;
@@ -803,7 +777,6 @@ function bindPanelEvents() {
     });
   });
 
-  // Color filter
   panel.querySelectorAll('[data-color]').forEach(btn => {
     btn.addEventListener('click', () => {
       _currentState.colorFilter = btn.dataset.color;
@@ -812,7 +785,6 @@ function bindPanelEvents() {
     });
   });
 
-  // Reset
   document.getElementById('aura-p-reset').addEventListener('click', () => {
     _currentState = {
       enabled: true, fontSize: 0, lineHeight: 0, letterSpacing: 0,
@@ -844,12 +816,10 @@ function saveAndApply() {
   chrome.storage.local.set({ auraState: _currentState });
   applyStyles(_currentState);
   updateFABDot();
-  // Sync popup if open
   chrome.runtime.sendMessage({ type: 'AURA_STATE_CHANGED', state: _currentState });
 }
 
 
-// === Reading Guide ===
 const READING_GUIDE_ID = 'aura-reading-guide';
 
 function createReadingGuide() {
@@ -874,7 +844,6 @@ function removeReadingGuide() {
   if (el) el.remove();
 }
 
-// === Page Summarizer ===
 const SUMMARY_OVERLAY_ID = 'aura-summary-overlay';
 
 function showPageSummary() {
@@ -886,11 +855,9 @@ function showPageSummary() {
   const text = (main.innerText || main.textContent || '').substring(0, 5000).trim();
   if (!text) return;
 
-  // Extract key info
   const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 20);
   const topSentences = sentences.slice(0, 5).map(s => s.trim());
 
-  // Get page title and headings
   const title = document.title || 'This Page';
   const headings = [...document.querySelectorAll('h1, h2, h3')].slice(0, 8).map(h => h.textContent.trim()).filter(Boolean);
 
@@ -930,12 +897,10 @@ function showPageSummary() {
   `;
   document.body.appendChild(overlay);
 
-  // Close on click outside or close button
   overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
   document.getElementById('aura-summary-close').addEventListener('click', () => overlay.remove());
 }
 
-// === Select-to-Speak ===
 function setupSelectTTS() {
   document.addEventListener('mouseup', handleSelectTTS);
 }
@@ -979,11 +944,9 @@ function handleSelectTTS() {
   });
   document.body.appendChild(btn);
 
-  // Remove after 5 seconds
   setTimeout(() => { if (btn.parentElement) btn.remove(); }, 5000);
 }
 
-// === Message Listener ===
 chrome.runtime.onMessage.addListener((message) => {
   if (message.type === 'AURA_UPDATE') {
     const prev = _currentState;
@@ -998,14 +961,12 @@ chrome.runtime.onMessage.addListener((message) => {
       removeCaptionOverlay();
     }
 
-    // Reading guide
     if (message.state.readingGuide && message.state.enabled) {
       createReadingGuide();
     } else {
       removeReadingGuide();
     }
 
-    // Select-to-speak
     if (message.state.selectTTS && message.state.enabled) {
       setupSelectTTS();
     } else {
@@ -1017,16 +978,13 @@ chrome.runtime.onMessage.addListener((message) => {
     readPageAloud();
   }
 
-  if (message.type === 'AURA_STOP_READING') {
-    // TTS is stopped via background script
-  }
+  if (message.type === 'AURA_STOP_READING') { /* handled by background */ }
 
   if (message.type === 'AURA_SUMMARIZE') {
     showPageSummary();
   }
 });
 
-// Load and apply saved state on page load, then create FAB
 chrome.storage.local.get('auraState', (result) => {
   _currentState = result.auraState || {
     enabled: true, fontSize: 0, lineHeight: 0, letterSpacing: 0,
@@ -1043,7 +1001,6 @@ chrome.storage.local.get('auraState', (result) => {
     if (_currentState.selectTTS) setupSelectTTS();
   }
 
-  // Create the floating button on every page
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', createFAB);
   } else {

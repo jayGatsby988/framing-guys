@@ -1,3 +1,7 @@
+/**
+ * Unified settings page — appearance, accessibility, voice, profile, notifications, and privacy.
+ * Applies CSS variables in real-time so users can preview changes before saving.
+ */
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -11,7 +15,6 @@ import {
 import { supabase, DEFAULT_PROFILE_ID, getPreferences, updatePreferences, logActivity } from '@/lib/supabase'
 
 interface UnifiedSettings {
-  // Appearance (from both pages)
   theme: string
   fontSize: number
   lineHeight: number
@@ -23,12 +26,10 @@ interface UnifiedSettings {
   focusHighlight: boolean
   colorBlindMode: 'none' | 'protanopia' | 'deuteranopia' | 'tritanopia'
   simplifiedLayout: boolean
-  // Voice & Audio
   voiceSpeed: number
   autoReadAloud: boolean
   soundAlerts: boolean
   captionSize: string
-  // Profile
   language: string
   displayName: string
 }
@@ -139,24 +140,17 @@ export default function SettingsPage() {
     loadSettings()
   }, [])
 
-  // Apply CSS variable changes to document root in real-time
   useEffect(() => {
     const root = document.documentElement
     root.style.setProperty('--a11y-font-size', `${settings.fontSize}px`)
     root.style.setProperty('--a11y-line-height', `${settings.lineHeight}`)
     root.style.setProperty('--a11y-letter-spacing', `${settings.letterSpacing}px`)
 
-    if (settings.highContrast) {
-      root.classList.add('high-contrast')
-    } else {
-      root.classList.remove('high-contrast')
-    }
+    if (settings.highContrast) root.classList.add('high-contrast')
+    else root.classList.remove('high-contrast')
 
-    if (settings.reducedMotion) {
-      root.classList.add('reduce-motion')
-    } else {
-      root.classList.remove('reduce-motion')
-    }
+    if (settings.reducedMotion) root.classList.add('reduce-motion')
+    else root.classList.remove('reduce-motion')
 
     if (settings.largePointer) {
       root.style.cursor = 'url("data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\'><circle cx=\'16\' cy=\'16\' r=\'14\' fill=\'%236366F1\' opacity=\'0.6\'/></svg>") 16 16, auto'
@@ -216,7 +210,6 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white flex items-center gap-3">
@@ -247,7 +240,6 @@ export default function SettingsPage() {
       </motion.div>
 
       <div className="grid lg:grid-cols-4 gap-6">
-        {/* Section Nav */}
         <div className="space-y-1">
           {sections.map((section) => (
             <button
@@ -265,15 +257,11 @@ export default function SettingsPage() {
           ))}
         </div>
 
-        {/* Settings Content */}
         <div className="lg:col-span-3">
-          {/* ===================== APPEARANCE ===================== */}
           {activeSection === 'appearance' && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
               <div className="grid lg:grid-cols-2 gap-6">
-                {/* Controls Column */}
                 <div className="space-y-4">
-                  {/* Theme */}
                   <div className="bg-[#0F0F12] border border-white/5 rounded-2xl p-5">
                     <h3 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
                       <Palette className="w-4 h-4" />
@@ -297,7 +285,6 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
-                  {/* Text & Typography */}
                   <div className="bg-[#0F0F12] border border-white/5 rounded-2xl p-5">
                     <h3 className="text-sm font-semibold text-white/60 mb-2 flex items-center gap-2">
                       <Type className="w-4 h-4" />
@@ -311,7 +298,6 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
-                  {/* Visual */}
                   <div className="bg-[#0F0F12] border border-white/5 rounded-2xl p-5">
                     <h3 className="text-sm font-semibold text-white/60 mb-2 flex items-center gap-2">
                       <Eye className="w-4 h-4" />
@@ -326,7 +312,6 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
-                  {/* Color Vision */}
                   <div className="bg-[#0F0F12] border border-white/5 rounded-2xl p-5">
                     <h3 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
                       <Eye className="w-4 h-4" />
@@ -350,11 +335,9 @@ export default function SettingsPage() {
                   </div>
                 </div>
 
-                {/* Live Preview Column */}
                 <div className="space-y-4">
                   <div className="bg-[#0F0F12] border border-white/5 rounded-2xl p-6 sticky top-6">
                     <h3 className="text-sm font-semibold text-white/60 mb-4">Live Preview</h3>
-
                     <div
                       className={`bg-[#070709] border border-white/10 rounded-xl p-6 transition-all ${
                         settings.highContrast ? 'bg-black border-white' : ''
@@ -372,19 +355,11 @@ export default function SettingsPage() {
                       <p className={`mb-4 ${settings.highContrast ? 'text-white' : 'text-white/70'}`}>
                         {previewText}
                       </p>
-
                       <div className="flex flex-wrap gap-2 mb-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          settings.highContrast ? 'bg-white text-black' : 'bg-indigo-500/20 text-indigo-300'
-                        }`}>Vision</span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          settings.highContrast ? 'bg-white text-black' : 'bg-pink-500/20 text-pink-300'
-                        }`}>Hearing</span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          settings.highContrast ? 'bg-white text-black' : 'bg-teal-500/20 text-teal-300'
-                        }`}>Audio</span>
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${settings.highContrast ? 'bg-white text-black' : 'bg-indigo-500/20 text-indigo-300'}`}>Vision</span>
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${settings.highContrast ? 'bg-white text-black' : 'bg-pink-500/20 text-pink-300'}`}>Hearing</span>
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${settings.highContrast ? 'bg-white text-black' : 'bg-teal-500/20 text-teal-300'}`}>Audio</span>
                       </div>
-
                       <button className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                         settings.highContrast
                           ? 'bg-white text-black hover:bg-gray-200'
@@ -393,7 +368,6 @@ export default function SettingsPage() {
                         Sample Button
                       </button>
                     </div>
-
                     <div className="mt-4 p-3 bg-white/5 rounded-xl">
                       <h4 className="text-xs font-medium text-white/40 mb-2">Active Settings</h4>
                       <div className="flex flex-wrap gap-1.5">
@@ -419,17 +393,15 @@ export default function SettingsPage() {
             </motion.div>
           )}
 
-          {/* ===================== VOICE & AUDIO ===================== */}
           {activeSection === 'voice' && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <div className="bg-[#0F0F12] border border-white/5 rounded-2xl p-6 space-y-2">
                 <h3 className="text-lg font-semibold text-white mb-4">Voice &amp; Audio</h3>
                 <div className="divide-y divide-white/5">
                   <Slider label="Voice Speed" value={settings.voiceSpeed} min={0.5} max={2} step={0.1} unit="x" onChange={(v) => update('voiceSpeed', v)} icon={Volume2} />
-                  <Toggle label="Auto Read-Aloud" desc="Automatically read new AI responses" value={settings.autoReadAloud} onChange={(v) => update('autoReadAloud', v)} icon={Volume2} />
+                  <Toggle label="Auto Read-Aloud" desc="Automatically read new responses" value={settings.autoReadAloud} onChange={(v) => update('autoReadAloud', v)} icon={Volume2} />
                   <Toggle label="Sound Alerts" desc="Play audio cues for important events" value={settings.soundAlerts} onChange={(v) => update('soundAlerts', v)} icon={Bell} />
                 </div>
-
                 <div className="pt-4">
                   <label className="text-sm text-white/60 block mb-3">Caption Size</label>
                   <div className="flex gap-2">
@@ -452,7 +424,6 @@ export default function SettingsPage() {
             </motion.div>
           )}
 
-          {/* ===================== PROFILE ===================== */}
           {activeSection === 'profile' && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <div className="bg-[#0F0F12] border border-white/5 rounded-2xl p-6 space-y-6">
@@ -482,7 +453,6 @@ export default function SettingsPage() {
             </motion.div>
           )}
 
-          {/* ===================== NOTIFICATIONS ===================== */}
           {activeSection === 'notifications' && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <div className="bg-[#0F0F12] border border-white/5 rounded-2xl p-6 space-y-6">
@@ -494,7 +464,6 @@ export default function SettingsPage() {
             </motion.div>
           )}
 
-          {/* ===================== PRIVACY ===================== */}
           {activeSection === 'privacy' && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <div className="bg-[#0F0F12] border border-white/5 rounded-2xl p-6 space-y-6">

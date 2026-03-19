@@ -1,9 +1,10 @@
-// Default state
+/* AURA popup — manages extension state and syncs settings with the content script. */
+
 const defaults = {
   enabled: true,
-  fontSize: 0,        // offset from 100% in steps of 10
-  lineHeight: 0,      // offset steps
-  letterSpacing: 0,   // offset steps
+  fontSize: 0,
+  lineHeight: 0,
+  letterSpacing: 0,
   highContrast: false,
   dyslexiaFont: false,
   reducedMotion: false,
@@ -17,11 +18,10 @@ const defaults = {
   readingGuide: false,
   highlightLinks: false,
   selectTTS: false,
-  // Education tools
   focusMode: false,
   highlightHeadings: false,
   lineRuler: false,
-  ttsSpeed: 2,        // index into ttsSpeedValues
+  ttsSpeed: 2,
 };
 
 const fontSizeSteps = [80, 90, 100, 110, 120, 130, 150, 175, 200];
@@ -32,12 +32,10 @@ const letterSpacingValues = [0, 1, 2, 3, 4];
 const ttsSpeedLabels = ['0.5x', '0.75x', '1.0x', '1.25x', '1.5x', '2.0x'];
 const ttsSpeedValues = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
 
-// Dashboard URL — update this to your deployed site
 const DASHBOARD_URL = 'https://aura-accessibility.vercel.app/dashboard';
 
 let state = { ...defaults };
 
-// Load state from storage
 chrome.storage.local.get('auraState', (result) => {
   if (result.auraState) {
     state = { ...defaults, ...result.auraState };
@@ -51,23 +49,18 @@ function save() {
 }
 
 function render() {
-  // Power button
   const powerBtn = document.getElementById('power-btn');
   powerBtn.classList.toggle('active', state.enabled);
 
-  // Font size
   const fsIdx = Math.max(0, Math.min(fontSizeSteps.length - 1, 2 + state.fontSize));
   document.getElementById('fontSize-value').textContent = fontSizeSteps[fsIdx] + '%';
 
-  // Line height
   const lhIdx = Math.max(0, Math.min(lineHeightLabels.length - 1, 1 + state.lineHeight));
   document.getElementById('lineHeight-value').textContent = lineHeightLabels[lhIdx];
 
-  // Letter spacing
   const lsIdx = Math.max(0, Math.min(letterSpacingLabels.length - 1, state.letterSpacing));
   document.getElementById('letterSpacing-value').textContent = letterSpacingLabels[lsIdx];
 
-  // Toggles
   setToggle('toggle-contrast', state.highContrast);
   setToggle('toggle-dyslexia', state.dyslexiaFont);
   setToggle('toggle-motion', state.reducedMotion);
@@ -75,12 +68,10 @@ function render() {
   setToggle('toggle-focus', state.focusHighlight);
   setToggle('toggle-images', state.hideImages);
 
-  // Color filter buttons
   document.querySelectorAll('.color-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.filter === state.colorFilter);
   });
 
-  // Action buttons
   document.getElementById('btn-read-aloud').classList.toggle('active', state.readAloud);
   document.getElementById('btn-simplify').classList.toggle('active', state.simplify);
   document.getElementById('btn-captions').classList.toggle('active', state.captions);
@@ -88,16 +79,13 @@ function render() {
   document.getElementById('btn-highlight-links').classList.toggle('active', state.highlightLinks);
   document.getElementById('btn-text-select').classList.toggle('active', state.selectTTS);
 
-  // Education tools
   setToggle('toggle-focus-mode', state.focusMode);
   setToggle('toggle-headings', state.highlightHeadings);
   setToggle('toggle-ruler', state.lineRuler);
 
-  // TTS Speed
   const ttsIdx = Math.max(0, Math.min(ttsSpeedLabels.length - 1, state.ttsSpeed));
   document.getElementById('ttsSpeed-value').textContent = ttsSpeedLabels[ttsIdx];
 
-  // Quick Notes
   chrome.storage.local.get('auraQuickNotes', (result) => {
     const notesEl = document.getElementById('quick-notes');
     if (notesEl && result.auraQuickNotes && !notesEl._userEdited) {
@@ -111,7 +99,6 @@ function setToggle(id, value) {
   el.setAttribute('aria-checked', value ? 'true' : 'false');
 }
 
-// Send settings to content script
 function applyToPage() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs[0]?.id) {
@@ -120,16 +107,12 @@ function applyToPage() {
   });
 }
 
-// === Event Listeners ===
-
-// Power toggle
 document.getElementById('power-btn').addEventListener('click', () => {
   state.enabled = !state.enabled;
   save();
   render();
 });
 
-// Step buttons (font size, line height, letter spacing)
 document.querySelectorAll('.step-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const action = btn.dataset.action;
@@ -150,7 +133,6 @@ document.querySelectorAll('.step-btn').forEach(btn => {
   });
 });
 
-// Toggle switches
 const toggleMap = {
   'toggle-contrast': 'highContrast',
   'toggle-dyslexia': 'dyslexiaFont',
@@ -168,7 +150,6 @@ Object.entries(toggleMap).forEach(([id, key]) => {
   });
 });
 
-// Color filter buttons
 document.querySelectorAll('.color-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     state.colorFilter = btn.dataset.filter;
@@ -177,7 +158,6 @@ document.querySelectorAll('.color-btn').forEach(btn => {
   });
 });
 
-// Read Aloud
 document.getElementById('btn-read-aloud').addEventListener('click', () => {
   state.readAloud = !state.readAloud;
   save();
@@ -199,28 +179,24 @@ document.getElementById('btn-read-aloud').addEventListener('click', () => {
   }
 });
 
-// Simplify
 document.getElementById('btn-simplify').addEventListener('click', () => {
   state.simplify = !state.simplify;
   save();
   render();
 });
 
-// Captions
 document.getElementById('btn-captions').addEventListener('click', () => {
   state.captions = !state.captions;
   save();
   render();
 });
 
-// Reading Guide
 document.getElementById('btn-reading-guide').addEventListener('click', () => {
   state.readingGuide = !state.readingGuide;
   save();
   render();
 });
 
-// Summarize Page
 document.getElementById('btn-summarize').addEventListener('click', () => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs[0]?.id) {
@@ -229,26 +205,22 @@ document.getElementById('btn-summarize').addEventListener('click', () => {
   });
 });
 
-// Highlight Links
 document.getElementById('btn-highlight-links').addEventListener('click', () => {
   state.highlightLinks = !state.highlightLinks;
   save();
   render();
 });
 
-// Select Text to Speech
 document.getElementById('btn-text-select').addEventListener('click', () => {
   state.selectTTS = !state.selectTTS;
   save();
   render();
 });
 
-// Dashboard - open in new tab
 document.getElementById('btn-dashboard').addEventListener('click', () => {
   chrome.tabs.create({ url: DASHBOARD_URL });
 });
 
-// Education Tools
 const eduToggleMap = {
   'toggle-focus-mode': 'focusMode',
   'toggle-headings': 'highlightHeadings',
@@ -263,14 +235,12 @@ Object.entries(eduToggleMap).forEach(([id, key]) => {
   });
 });
 
-// Quick Notes - auto-save
 const notesEl = document.getElementById('quick-notes');
 notesEl.addEventListener('input', () => {
   notesEl._userEdited = true;
   chrome.storage.local.set({ auraQuickNotes: notesEl.value });
 });
 
-// Copy notes
 document.getElementById('btn-copy-notes').addEventListener('click', () => {
   navigator.clipboard.writeText(notesEl.value).then(() => {
     const btn = document.getElementById('btn-copy-notes');
@@ -279,13 +249,11 @@ document.getElementById('btn-copy-notes').addEventListener('click', () => {
   });
 });
 
-// Clear notes
 document.getElementById('btn-clear-notes').addEventListener('click', () => {
   notesEl.value = '';
   chrome.storage.local.set({ auraQuickNotes: '' });
 });
 
-// Send notes to dashboard
 document.getElementById('btn-send-dashboard').addEventListener('click', () => {
   const notes = notesEl.value;
   if (notes.trim()) {
@@ -295,7 +263,6 @@ document.getElementById('btn-send-dashboard').addEventListener('click', () => {
   }
 });
 
-// Reset
 document.getElementById('btn-reset').addEventListener('click', () => {
   state = { ...defaults };
   save();

@@ -1,3 +1,7 @@
+/**
+ * Main dashboard console — customizable widget grid with stats, chat, vision, and quick actions.
+ * Widget layout persists to localStorage so users keep their preferred arrangement.
+ */
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
@@ -12,7 +16,6 @@ import {
 } from 'lucide-react'
 import { supabase, DEFAULT_PROFILE_ID, logActivity } from '@/lib/supabase'
 
-// ─── Types ────────────────────────────────────────────────
 interface ActivityItem {
   id: string; action: string; tool: string; details: string | null; created_at: string
 }
@@ -49,7 +52,6 @@ function loadLayout(): Record<WidgetId, WidgetConfig> {
     if (saved) {
       const parsed = JSON.parse(saved)
       const defaults = getDefaultLayout()
-      // Merge with defaults to handle new widgets
       for (const id of WIDGET_IDS) {
         if (parsed[id]) defaults[id] = { ...defaults[id], ...parsed[id] }
       }
@@ -63,7 +65,6 @@ function saveLayout(layout: Record<WidgetId, WidgetConfig>) {
   localStorage.setItem('aura-widget-layout', JSON.stringify(layout))
 }
 
-// ─── Helpers ──────────────────────────────────────────────
 const toolIcons: Record<string, typeof Eye> = {
   vision: Eye, notes: BookOpen, chat: MessageSquare,
   audio: Volume2, settings: Settings, extension: Globe,
@@ -90,7 +91,6 @@ function getGreeting() {
   return 'Good evening'
 }
 
-// ─── Widget Shell ─────────────────────────────────────────
 function WidgetShell({ id, layout, setLayout, children, noPad, fullLink }: {
   id: WidgetId
   layout: Record<WidgetId, WidgetConfig>
@@ -122,7 +122,6 @@ function WidgetShell({ id, layout, setLayout, children, noPad, fullLink }: {
         ${config.size === 'lg' ? 'col-span-2' : ''}
       `}
     >
-      {/* Widget Header */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.04] bg-white/[0.01]">
         <div className="flex items-center gap-2.5">
           <GripVertical className="w-3.5 h-3.5 text-white/10 cursor-grab" />
@@ -143,7 +142,6 @@ function WidgetShell({ id, layout, setLayout, children, noPad, fullLink }: {
           </button>
         </div>
       </div>
-      {/* Widget Body */}
       <AnimatePresence>
         {!minimized && (
           <motion.div
@@ -163,7 +161,6 @@ function WidgetShell({ id, layout, setLayout, children, noPad, fullLink }: {
   )
 }
 
-// ─── Main Dashboard ───────────────────────────────────────
 export default function DashboardConsole() {
   const [layout, setLayout] = useState<Record<WidgetId, WidgetConfig>>(getDefaultLayout)
   const [configOpen, setConfigOpen] = useState(false)
@@ -171,18 +168,15 @@ export default function DashboardConsole() {
   const [stats, setStats] = useState({ vision: 0, captions: 0, chats: 0 })
   const [displayName, setDisplayName] = useState('User')
 
-  // Chat widget state
   const [chatMessages, setChatMessages] = useState<ChatMsg[]>([])
   const [chatInput, setChatInput] = useState('')
   const [chatLoading, setChatLoading] = useState(false)
   const chatEndRef = useRef<HTMLDivElement>(null)
 
-  // Vision widget state
   const [visionResult, setVisionResult] = useState('')
   const [visionLoading, setVisionLoading] = useState(false)
   const visionInputRef = useRef<HTMLInputElement>(null)
 
-  // A11y widget state
   const [a11y, setA11y] = useState({ fontSize: 100, highContrast: false, dyslexiaFont: false, reducedMotion: false })
 
   useEffect(() => {
@@ -207,7 +201,6 @@ export default function DashboardConsole() {
     if (profileRes.data?.display_name) setDisplayName(profileRes.data.display_name)
   }
 
-  // Chat send
   const sendChat = useCallback(async () => {
     if (!chatInput.trim() || chatLoading) return
     const userMsg: ChatMsg = { role: 'user', content: chatInput.trim() }
@@ -229,7 +222,6 @@ export default function DashboardConsole() {
     setChatLoading(false)
   }, [chatInput, chatMessages, chatLoading])
 
-  // Vision analyze
   async function analyzeImage(file: File) {
     setVisionLoading(true)
     setVisionResult('')
@@ -252,7 +244,6 @@ export default function DashboardConsole() {
     reader.readAsDataURL(file)
   }
 
-  // A11y apply
   useEffect(() => {
     document.documentElement.style.setProperty('--user-font-size', `${a11y.fontSize}%`)
     if (a11y.highContrast) document.documentElement.classList.add('high-contrast')
@@ -275,12 +266,10 @@ export default function DashboardConsole() {
     saveLayout(def)
   }
 
-  const visibleWidgets = WIDGET_IDS.filter(id => layout[id].visible)
   const hiddenWidgets = WIDGET_IDS.filter(id => !layout[id].visible)
 
   return (
     <div className="space-y-4 pb-8">
-      {/* ── Console Header Bar ── */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
@@ -314,7 +303,6 @@ export default function DashboardConsole() {
         </div>
       </div>
 
-      {/* ── Widget Config Panel ── */}
       <AnimatePresence>
         {configOpen && (
           <motion.div
@@ -360,10 +348,8 @@ export default function DashboardConsole() {
         )}
       </AnimatePresence>
 
-      {/* ── Widget Grid ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <AnimatePresence mode="popLayout">
-          {/* Stats Widget */}
           {layout.stats.visible && (
             <WidgetShell key="stats" id="stats" layout={layout} setLayout={l => { setLayout(l); saveLayout(l) }}>
               <div className="grid grid-cols-3 gap-3">
@@ -384,7 +370,6 @@ export default function DashboardConsole() {
             </WidgetShell>
           )}
 
-          {/* Quick Actions Widget */}
           {layout['quick-actions'].visible && (
             <WidgetShell key="quick-actions" id="quick-actions" layout={layout} setLayout={l => { setLayout(l); saveLayout(l) }}>
               <div className="grid grid-cols-3 gap-2">
@@ -411,7 +396,6 @@ export default function DashboardConsole() {
             </WidgetShell>
           )}
 
-          {/* Chat Widget */}
           {layout.chat.visible && (
             <WidgetShell key="chat" id="chat" layout={layout} setLayout={l => { setLayout(l); saveLayout(l) }} noPad fullLink="/dashboard/chat">
               <div className="flex flex-col" style={{ height: 260 }}>
@@ -473,7 +457,6 @@ export default function DashboardConsole() {
             </WidgetShell>
           )}
 
-          {/* Vision Widget */}
           {layout.vision.visible && (
             <WidgetShell key="vision" id="vision" layout={layout} setLayout={l => { setLayout(l); saveLayout(l) }} fullLink="/dashboard/vision">
               <div className="space-y-3">
@@ -515,7 +498,6 @@ export default function DashboardConsole() {
             </WidgetShell>
           )}
 
-          {/* Live Camera Widget */}
           {layout['live-camera'].visible && (
             <WidgetShell key="live-camera" id="live-camera" layout={layout} setLayout={l => { setLayout(l); saveLayout(l) }} fullLink="/dashboard/live">
               <Link href="/dashboard/live" className="group block">
@@ -529,7 +511,7 @@ export default function DashboardConsole() {
                       <span className="px-1.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 text-[8px] font-bold uppercase">New</span>
                     </div>
                     <p className="text-[11px] text-white/30 leading-relaxed">
-                      Scan QR with phone, get real-time AI narration here.
+                      Scan QR with phone, get real-time narration here.
                     </p>
                   </div>
                   <ArrowRight className="w-4 h-4 text-white/10 group-hover:text-red-400 group-hover:translate-x-1 transition-all" />
@@ -538,7 +520,6 @@ export default function DashboardConsole() {
             </WidgetShell>
           )}
 
-          {/* Activity Widget */}
           {layout.activity.visible && (
             <WidgetShell key="activity" id="activity" layout={layout} setLayout={l => { setLayout(l); saveLayout(l) }} noPad>
               {activity.length === 0 ? (
@@ -569,11 +550,9 @@ export default function DashboardConsole() {
             </WidgetShell>
           )}
 
-          {/* Quick Settings Widget */}
           {layout['quick-settings'].visible && (
             <WidgetShell key="quick-settings" id="quick-settings" layout={layout} setLayout={l => { setLayout(l); saveLayout(l) }} fullLink="/dashboard/settings">
               <div className="space-y-3">
-                {/* Font Size */}
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] text-white/40">Font Size</span>
                   <div className="flex items-center gap-2">
@@ -588,7 +567,6 @@ export default function DashboardConsole() {
                     >+</button>
                   </div>
                 </div>
-                {/* Toggles */}
                 {[
                   { key: 'highContrast' as const, label: 'High Contrast' },
                   { key: 'dyslexiaFont' as const, label: 'Dyslexia Font' },
@@ -610,7 +588,6 @@ export default function DashboardConsole() {
         </AnimatePresence>
       </div>
 
-      {/* ── Extension Banner ── */}
       <div className="bg-[#0B0B0F] border border-white/[0.06] rounded-2xl p-5 flex items-center gap-4">
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/10 flex items-center justify-center border border-indigo-500/20 flex-shrink-0">
           <Shield className="w-5 h-5 text-indigo-400" />

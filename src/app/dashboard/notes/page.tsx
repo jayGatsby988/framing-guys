@@ -1,3 +1,7 @@
+/**
+ * Lecture Notes — record lectures with live transcription, take notes side-by-side,
+ * and generate summaries. Notes auto-save to Supabase every 5 seconds.
+ */
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
@@ -22,13 +26,11 @@ interface Note {
 }
 
 export default function NotesPage() {
-  // Note list state
   const [notes, setNotes] = useState<Note[]>([])
   const [selectedNote, setSelectedNote] = useState<Note | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true)
 
-  // Editor state
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [tags, setTags] = useState<string[]>([])
@@ -36,7 +38,6 @@ export default function NotesPage() {
   const [saving, setSaving] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
 
-  // Recording state
   const [isRecording, setIsRecording] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
   const [transcript, setTranscript] = useState('')
@@ -44,11 +45,9 @@ export default function NotesPage() {
   const [duration, setDuration] = useState(0)
   const [isSupported, setIsSupported] = useState(true)
 
-  // AI state
   const [summarizing, setSummarizing] = useState(false)
   const [summary, setSummary] = useState('')
 
-  // View state
   const [view, setView] = useState<'list' | 'editor'>('list')
   const [showTranscript, setShowTranscript] = useState(true)
 
@@ -58,7 +57,6 @@ export default function NotesPage() {
   const transcriptRef = useRef('')
   const editorRef = useRef<HTMLTextAreaElement>(null)
 
-  // Check speech recognition support
   useEffect(() => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition
     if (!SR) setIsSupported(false)
@@ -70,7 +68,6 @@ export default function NotesPage() {
     }
   }, [])
 
-  // Auto-save when content changes
   useEffect(() => {
     if (!selectedNote && !title && !content && !transcript) return
     if (autoSaveRef.current) clearTimeout(autoSaveRef.current)
@@ -171,7 +168,6 @@ export default function NotesPage() {
     logActivity('notes', 'delete', 'Deleted note')
   }
 
-  // Speech Recognition
   const startRecording = useCallback(() => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition
     if (!SR) return
@@ -201,12 +197,11 @@ export default function NotesPage() {
 
     recognition.onerror = (event) => {
       if (event.error === 'no-speech') return
-      console.error('Speech recognition error:', event.error)
     }
 
     recognition.onend = () => {
       if (isRecording && !isPaused) {
-        try { recognition.start() } catch (e) { /* ignore */ }
+        try { recognition.start() } catch { /* noop */ }
       }
     }
 
@@ -251,10 +246,10 @@ export default function NotesPage() {
       }
       setInterim(interimText)
     }
-    recognition.onerror = (event) => { if (event.error !== 'no-speech') console.error(event.error) }
+    recognition.onerror = (event) => { if (event.error !== 'no-speech') return }
     recognition.onend = () => {
       if (isRecording && !isPaused) {
-        try { recognition.start() } catch (e) { /* ignore */ }
+        try { recognition.start() } catch { /* noop */ }
       }
     }
     recognition.start()
@@ -334,10 +329,6 @@ export default function NotesPage() {
   })
 
   const allTags = [...new Set(notes.flatMap(n => n.tags || []))]
-
-  // ═══════════════════════════════════════════
-  // RENDER
-  // ═══════════════════════════════════════════
 
   return (
     <div className="max-w-full">
@@ -685,7 +676,7 @@ export default function NotesPage() {
                 </div>
               ) : (
                 <p className="text-xs text-white/20">
-                  Click Summarize to get an AI-generated summary of your notes and transcript.
+                  Click Summarize to get a summary of your notes and transcript.
                 </p>
               )}
             </div>

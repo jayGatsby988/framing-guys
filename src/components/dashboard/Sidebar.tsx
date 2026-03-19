@@ -1,3 +1,6 @@
+/**
+ * Dashboard sidebar — responsive nav with mobile drawer and collapsible desktop rail.
+ */
 'use client'
 
 import { useState, Dispatch, SetStateAction } from 'react'
@@ -45,7 +48,6 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 
   const sidebarContent = (
     <div className="flex flex-col h-full">
-      {/* Logo */}
       <div className="flex items-center gap-3 px-4 py-5 border-b border-white/5">
         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0">
           <Sparkles className="w-5 h-5 text-white" />
@@ -58,7 +60,6 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
         )}
       </div>
 
-      {/* Nav */}
       <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
           const active = isActive(item.href)
@@ -100,7 +101,6 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
         })}
       </nav>
 
-      {/* Collapse toggle - desktop only */}
       <div className="hidden lg:block border-t border-white/5 p-3">
         <button
           onClick={() => setCollapsed(!collapsed)}
@@ -111,7 +111,6 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
         </button>
       </div>
 
-      {/* Logout */}
       <div className="border-t border-white/5 p-3">
         <button
           onClick={handleLogout}
@@ -126,7 +125,6 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 
   return (
     <>
-      {/* Mobile hamburger */}
       <button
         onClick={() => setMobileOpen(true)}
         className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-xl bg-[#0F0F12] border border-white/10 text-white/70"
@@ -135,7 +133,6 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
         <Menu className="w-5 h-5" />
       </button>
 
-      {/* Mobile overlay */}
       <AnimatePresence>
         {mobileOpen && (
           <>
@@ -166,7 +163,6 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
         )}
       </AnimatePresence>
 
-      {/* Desktop sidebar */}
       <motion.aside
         animate={{ width: collapsed ? 72 : 240 }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}

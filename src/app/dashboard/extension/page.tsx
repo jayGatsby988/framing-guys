@@ -1,3 +1,7 @@
+/**
+ * Extension settings — toggle features for the AURA Chrome Extension.
+ * Config is persisted to localStorage and broadcast to the extension via postMessage.
+ */
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
@@ -9,27 +13,22 @@ import {
 } from 'lucide-react'
 
 interface ExtensionConfig {
-  // Reading Tools
   readAloud: boolean
   readingGuide: boolean
   pageSimplifier: boolean
   highlightHeadings: boolean
   highlightLinks: boolean
-  // Education Tools
   focusMode: boolean
   quickNotes: boolean
   pageSummarizer: boolean
   lineRuler: boolean
-  // Accessibility
   ttsOnSelect: boolean
   colorVisionFilters: boolean
   fontSpacingControls: boolean
   highContrastMode: boolean
   largeCursor: boolean
-  // Quick Settings
   defaultTtsSpeed: number
   floatingActionButton: boolean
-  // Sync
   syncNotesToDashboard: boolean
   lastSynced: string | null
 }
@@ -70,26 +69,19 @@ export default function ExtensionPage() {
         const parsed = JSON.parse(stored)
         setConfig(prev => ({ ...prev, ...parsed }))
       }
-    } catch {
-      // ignore parse errors
-    }
+    } catch { /* noop */ }
   }, [])
 
   const persistAndBroadcast = useCallback((updated: ExtensionConfig) => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
-    } catch {
-      // ignore storage errors
-    }
-    // Communicate with Chrome extension
+    } catch { /* noop */ }
     try {
       window.postMessage(
         { type: 'AURA_CONFIG_UPDATE', payload: updated },
         window.location.origin
       )
-    } catch {
-      // ignore postMessage errors
-    }
+    } catch { /* noop */ }
   }, [])
 
   function updateConfig<K extends keyof ExtensionConfig>(key: K, value: ExtensionConfig[K]) {
@@ -130,7 +122,6 @@ export default function ExtensionPage() {
     }
   }
 
-  // Toggle sub-component matching existing dashboard style
   function Toggle({ label, desc, enabled, onChange, icon: Icon }: {
     label: string
     desc: string
@@ -165,7 +156,6 @@ export default function ExtensionPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <div>
           <h1 className="text-2xl font-bold text-white flex items-center gap-3">
@@ -178,11 +168,8 @@ export default function ExtensionPage() {
         </div>
       </motion.div>
 
-      {/* Two-column layout */}
       <div className="grid lg:grid-cols-3 gap-6">
-        {/* Left column - Feature Toggles (2/3 width) */}
         <div className="lg:col-span-2 space-y-4">
-          {/* Reading Tools */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -194,45 +181,14 @@ export default function ExtensionPage() {
               Reading Tools
             </h3>
             <div className="divide-y divide-white/5">
-              <Toggle
-                label="Read Aloud"
-                desc="Read any webpage content aloud"
-                enabled={config.readAloud}
-                onChange={(v) => updateConfig('readAloud', v)}
-                icon={Volume2}
-              />
-              <Toggle
-                label="Reading Guide"
-                desc="Horizontal ruler that follows your cursor"
-                enabled={config.readingGuide}
-                onChange={(v) => updateConfig('readingGuide', v)}
-                icon={Ruler}
-              />
-              <Toggle
-                label="Page Simplifier"
-                desc="Strip distractions for cleaner reading"
-                enabled={config.pageSimplifier}
-                onChange={(v) => updateConfig('pageSimplifier', v)}
-                icon={ToggleLeft}
-              />
-              <Toggle
-                label="Highlight Headings"
-                desc="Make page structure more visible"
-                enabled={config.highlightHeadings}
-                onChange={(v) => updateConfig('highlightHeadings', v)}
-                icon={Type}
-              />
-              <Toggle
-                label="Highlight Links"
-                desc="Make all links stand out on any page"
-                enabled={config.highlightLinks}
-                onChange={(v) => updateConfig('highlightLinks', v)}
-                icon={Link2}
-              />
+              <Toggle label="Read Aloud" desc="Read any webpage content aloud" enabled={config.readAloud} onChange={(v) => updateConfig('readAloud', v)} icon={Volume2} />
+              <Toggle label="Reading Guide" desc="Horizontal ruler that follows your cursor" enabled={config.readingGuide} onChange={(v) => updateConfig('readingGuide', v)} icon={Ruler} />
+              <Toggle label="Page Simplifier" desc="Strip distractions for cleaner reading" enabled={config.pageSimplifier} onChange={(v) => updateConfig('pageSimplifier', v)} icon={ToggleLeft} />
+              <Toggle label="Highlight Headings" desc="Make page structure more visible" enabled={config.highlightHeadings} onChange={(v) => updateConfig('highlightHeadings', v)} icon={Type} />
+              <Toggle label="Highlight Links" desc="Make all links stand out on any page" enabled={config.highlightLinks} onChange={(v) => updateConfig('highlightLinks', v)} icon={Link2} />
             </div>
           </motion.div>
 
-          {/* Education Tools */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -244,38 +200,13 @@ export default function ExtensionPage() {
               Education Tools
             </h3>
             <div className="divide-y divide-white/5">
-              <Toggle
-                label="Focus Mode"
-                desc="Dim distractions, highlight main content"
-                enabled={config.focusMode}
-                onChange={(v) => updateConfig('focusMode', v)}
-                icon={Focus}
-              />
-              <Toggle
-                label="Quick Notes"
-                desc="Take notes on any page, synced to dashboard"
-                enabled={config.quickNotes}
-                onChange={(v) => updateConfig('quickNotes', v)}
-                icon={StickyNote}
-              />
-              <Toggle
-                label="Page Summarizer"
-                desc="AI-powered page summaries"
-                enabled={config.pageSummarizer}
-                onChange={(v) => updateConfig('pageSummarizer', v)}
-                icon={Sparkles}
-              />
-              <Toggle
-                label="Line Ruler"
-                desc="Horizontal ruler to track reading position"
-                enabled={config.lineRuler}
-                onChange={(v) => updateConfig('lineRuler', v)}
-                icon={Ruler}
-              />
+              <Toggle label="Focus Mode" desc="Dim distractions, highlight main content" enabled={config.focusMode} onChange={(v) => updateConfig('focusMode', v)} icon={Focus} />
+              <Toggle label="Quick Notes" desc="Take notes on any page, synced to dashboard" enabled={config.quickNotes} onChange={(v) => updateConfig('quickNotes', v)} icon={StickyNote} />
+              <Toggle label="Page Summarizer" desc="Summarize any page in one click" enabled={config.pageSummarizer} onChange={(v) => updateConfig('pageSummarizer', v)} icon={Sparkles} />
+              <Toggle label="Line Ruler" desc="Horizontal ruler to track reading position" enabled={config.lineRuler} onChange={(v) => updateConfig('lineRuler', v)} icon={Ruler} />
             </div>
           </motion.div>
 
-          {/* Accessibility */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -287,48 +218,16 @@ export default function ExtensionPage() {
               Accessibility
             </h3>
             <div className="divide-y divide-white/5">
-              <Toggle
-                label="Text-to-Speech on Select"
-                desc="Hear selected text read aloud"
-                enabled={config.ttsOnSelect}
-                onChange={(v) => updateConfig('ttsOnSelect', v)}
-                icon={Volume2}
-              />
-              <Toggle
-                label="Color Vision Filters"
-                desc="Apply color blindness corrections"
-                enabled={config.colorVisionFilters}
-                onChange={(v) => updateConfig('colorVisionFilters', v)}
-                icon={Palette}
-              />
-              <Toggle
-                label="Font & Spacing Controls"
-                desc="Customize text size and spacing"
-                enabled={config.fontSpacingControls}
-                onChange={(v) => updateConfig('fontSpacingControls', v)}
-                icon={Type}
-              />
-              <Toggle
-                label="High Contrast Mode"
-                desc="Increase page contrast"
-                enabled={config.highContrastMode}
-                onChange={(v) => updateConfig('highContrastMode', v)}
-                icon={Contrast}
-              />
-              <Toggle
-                label="Large Cursor"
-                desc="Make cursor more visible"
-                enabled={config.largeCursor}
-                onChange={(v) => updateConfig('largeCursor', v)}
-                icon={MousePointer}
-              />
+              <Toggle label="Text-to-Speech on Select" desc="Hear selected text read aloud" enabled={config.ttsOnSelect} onChange={(v) => updateConfig('ttsOnSelect', v)} icon={Volume2} />
+              <Toggle label="Color Vision Filters" desc="Apply color blindness corrections" enabled={config.colorVisionFilters} onChange={(v) => updateConfig('colorVisionFilters', v)} icon={Palette} />
+              <Toggle label="Font & Spacing Controls" desc="Customize text size and spacing" enabled={config.fontSpacingControls} onChange={(v) => updateConfig('fontSpacingControls', v)} icon={Type} />
+              <Toggle label="High Contrast Mode" desc="Increase page contrast" enabled={config.highContrastMode} onChange={(v) => updateConfig('highContrastMode', v)} icon={Contrast} />
+              <Toggle label="Large Cursor" desc="Make cursor more visible" enabled={config.largeCursor} onChange={(v) => updateConfig('largeCursor', v)} icon={MousePointer} />
             </div>
           </motion.div>
         </div>
 
-        {/* Right column */}
         <div className="space-y-4">
-          {/* Extension Status */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -339,8 +238,6 @@ export default function ExtensionPage() {
               <Chrome className="w-4 h-4" />
               Extension Status
             </h3>
-
-            {/* Stylized browser extension mockup */}
             <div className="bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 rounded-xl p-5 text-center">
               <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mb-3 shadow-lg shadow-indigo-500/20">
                 <Chrome className="w-8 h-8 text-white" />
@@ -350,7 +247,7 @@ export default function ExtensionPage() {
                 v2.0
               </span>
               <p className="text-white/30 text-xs mt-3 leading-relaxed">
-                Accessibility tools, reading aids, and AI-powered features right in your browser.
+                Accessibility tools, reading aids, and smart features right in your browser.
               </p>
               <a
                 href="/dashboard/extension#install"
@@ -362,7 +259,6 @@ export default function ExtensionPage() {
             </div>
           </motion.div>
 
-          {/* Quick Settings */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -373,8 +269,6 @@ export default function ExtensionPage() {
               <Settings2 className="w-4 h-4" />
               Quick Settings
             </h3>
-
-            {/* TTS Speed Slider */}
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-white/80">Default TTS Speed</span>
@@ -395,19 +289,11 @@ export default function ExtensionPage() {
                 <span className="text-[10px] text-white/20">2.0x</span>
               </div>
             </div>
-
             <div className="border-t border-white/5 pt-1">
-              <Toggle
-                label="Floating Action Button"
-                desc="Show quick-access button on every page"
-                enabled={config.floatingActionButton}
-                onChange={(v) => updateConfig('floatingActionButton', v)}
-                icon={ToggleLeft}
-              />
+              <Toggle label="Floating Action Button" desc="Show quick-access button on every page" enabled={config.floatingActionButton} onChange={(v) => updateConfig('floatingActionButton', v)} icon={ToggleLeft} />
             </div>
           </motion.div>
 
-          {/* Sync */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -418,17 +304,9 @@ export default function ExtensionPage() {
               <Cloud className="w-4 h-4" />
               Sync
             </h3>
-
             <div className="border-b border-white/5 pb-1">
-              <Toggle
-                label="Sync notes to dashboard"
-                desc="Keep extension notes in sync"
-                enabled={config.syncNotesToDashboard}
-                onChange={(v) => updateConfig('syncNotesToDashboard', v)}
-                icon={Cloud}
-              />
+              <Toggle label="Sync notes to dashboard" desc="Keep extension notes in sync" enabled={config.syncNotesToDashboard} onChange={(v) => updateConfig('syncNotesToDashboard', v)} icon={Cloud} />
             </div>
-
             <div className="pt-3">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs text-white/40">Last synced</span>
