@@ -74,7 +74,7 @@ export default function SignupPage() {
           animate={{ opacity: 1, scale: 1 }}
           className="w-full max-w-md relative z-10 text-center"
         >
-          <div className="bg-[#0F0F12] border border-[#1A1A2E] rounded-2xl p-8">
+          <div className="bg-[#13131A] border border-[#2A2A3E] rounded-2xl p-8 shadow-2xl shadow-indigo-500/5">
             <div className="w-16 h-16 mx-auto rounded-full bg-green-500/10 flex items-center justify-center mb-4">
               <Check className="w-8 h-8 text-green-400" />
             </div>
@@ -122,7 +122,7 @@ export default function SignupPage() {
         </div>
 
         {/* Form card */}
-        <div className="bg-[#0F0F12] border border-[#1A1A2E] rounded-2xl p-8">
+        <div className="bg-[#13131A] border border-[#2A2A3E] rounded-2xl p-8 shadow-2xl shadow-indigo-500/5">
           <form onSubmit={handleSignup} className="space-y-5">
             {/* Name */}
             <div>
@@ -138,7 +138,7 @@ export default function SignupPage() {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Your name"
                   required
-                  className="w-full pl-10 pr-4 py-3 bg-[#070709] border border-[#1A1A2E] rounded-xl text-white placeholder-[#3A3A4E] focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 transition-colors"
+                  className="w-full pl-10 pr-4 py-3 bg-[#0A0A10] border border-[#2A2A3E] rounded-xl text-white placeholder-[#555568] focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 transition-colors"
                 />
               </div>
             </div>
@@ -157,7 +157,7 @@ export default function SignupPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   required
-                  className="w-full pl-10 pr-4 py-3 bg-[#070709] border border-[#1A1A2E] rounded-xl text-white placeholder-[#3A3A4E] focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 transition-colors"
+                  className="w-full pl-10 pr-4 py-3 bg-[#0A0A10] border border-[#2A2A3E] rounded-xl text-white placeholder-[#555568] focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 transition-colors"
                 />
               </div>
             </div>
@@ -177,7 +177,7 @@ export default function SignupPage() {
                   placeholder="At least 6 characters"
                   required
                   minLength={6}
-                  className="w-full pl-10 pr-12 py-3 bg-[#070709] border border-[#1A1A2E] rounded-xl text-white placeholder-[#3A3A4E] focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 transition-colors"
+                  className="w-full pl-10 pr-12 py-3 bg-[#0A0A10] border border-[#2A2A3E] rounded-xl text-white placeholder-[#555568] focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 transition-colors"
                 />
                 <button
                   type="button"
@@ -199,7 +199,7 @@ export default function SignupPage() {
                           : password.length >= 8
                             ? 'bg-yellow-500'
                             : 'bg-red-500'
-                        : 'bg-[#1A1A2E]'
+                        : 'bg-[#2A2A3E]'
                     }`}
                   />
                 ))}
@@ -236,16 +236,16 @@ export default function SignupPage() {
 
           {/* Divider */}
           <div className="flex items-center gap-3 my-6">
-            <div className="flex-1 h-px bg-[#1A1A2E]" />
+            <div className="flex-1 h-px bg-[#2A2A3E]" />
             <span className="text-xs text-[#5B5B6E] uppercase tracking-wider">or</span>
-            <div className="flex-1 h-px bg-[#1A1A2E]" />
+            <div className="flex-1 h-px bg-[#2A2A3E]" />
           </div>
 
           {/* Google OAuth */}
           <button
             onClick={handleGoogleSignup}
             disabled={loading}
-            className="w-full py-3 bg-[#070709] border border-[#1A1A2E] hover:border-[#2A2A3E] text-white font-medium rounded-xl transition-all duration-200 flex items-center justify-center gap-3 disabled:opacity-50"
+            className="w-full py-3 bg-[#0A0A10] border border-[#2A2A3E] hover:border-[#4A4A5E] text-white font-medium rounded-xl transition-all duration-200 flex items-center justify-center gap-3 disabled:opacity-50"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
