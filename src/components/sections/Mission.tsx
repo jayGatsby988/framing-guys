@@ -6,24 +6,24 @@ import { Badge } from "@/components/ui/Badge";
 
 const values = [
   {
-    title: "Inclusion by Design",
+    title: "Education Equity",
     description:
-      "We don't add accessibility as an afterthought. Every decision, every feature, and every line of code starts with inclusive design principles.",
+      "Every student — regardless of disability — deserves the same quality of education. AURA levels the playing field with AI tools that bridge the accessibility gap in classrooms.",
   },
   {
     title: "Privacy First",
     description:
-      "Your sensory data is intimate and private. AURA processes everything on-device where possible, and never stores or sells your personal information.",
+      "Student data is sacred. AURA processes lecture content on-device where possible, complies with FERPA, and never shares or sells student information.",
   },
   {
-    title: "Universal Access",
+    title: "Universal Campus Access",
     description:
-      "AURA should be available to everyone who needs it, regardless of geography or economic status. We're committed to accessible pricing and global availability.",
+      "From community colleges to research universities, AURA should be available to every student who needs it — regardless of their institution's budget or location.",
   },
   {
-    title: "Human-Centered AI",
+    title: "Human-Centered Learning",
     description:
-      "Technology should serve people, not the other way around. AURA amplifies human capability and independence — never replacing human connection.",
+      "AI should enhance the student-teacher relationship, not replace it. AURA empowers students to participate fully in the classroom experience alongside their peers.",
   },
 ];
 
@@ -68,12 +68,12 @@ export function Mission() {
               id="mission-heading"
               className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight tracking-tight max-w-5xl mx-auto mb-8"
             >
-              <span className="text-[#F8F8FC]">&ldquo;Accessibility is not </span>
-              <span className="gradient-text">a feature</span>
-              <span className="text-[#F8F8FC]">.</span>
+              <span className="text-[#F8F8FC]">&ldquo;Education is a </span>
+              <span className="gradient-text">right</span>
+              <span className="text-[#F8F8FC]">,</span>
               <br />
-              <span className="text-[#F8F8FC]">It&apos;s a </span>
-              <span className="gradient-text">foundation</span>
+              <span className="text-[#F8F8FC]">not a </span>
+              <span className="gradient-text">privilege</span>
               <span className="text-[#F8F8FC]">.&rdquo;</span>
             </p>
           </motion.blockquote>
@@ -85,10 +85,10 @@ export function Mission() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-lg sm:text-xl text-[#9898A8] max-w-3xl mx-auto leading-relaxed"
           >
-            We started AURA because we believe that disability is not a personal
-            limitation — it&apos;s a design failure. When we build technology that works
-            for everyone, we don&apos;t just serve people with disabilities. We build
-            better technology for all of humanity.
+            We started AURA because we believe that no student should fail
+            because their classroom wasn&apos;t designed for them. When we build
+            education technology that works for impaired students, we don&apos;t just
+            serve them — we build better learning tools for everyone.
           </motion.p>
         </div>
 

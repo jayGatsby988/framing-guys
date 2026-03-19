@@ -122,6 +122,46 @@
 
   <div class="divider"></div>
 
+  <!-- Education Tools -->
+  <section class="control-group">
+    <h3 class="group-title">Education Tools</h3>
+    <div class="toggle-row">
+      <label>Focus Mode</label>
+      <button class="toggle" id="toggle-focus-mode" role="switch" aria-checked="false"><span class="toggle-thumb"></span></button>
+    </div>
+    <div class="toggle-row">
+      <label>Highlight Headings</label>
+      <button class="toggle" id="toggle-headings" role="switch" aria-checked="false"><span class="toggle-thumb"></span></button>
+    </div>
+    <div class="toggle-row">
+      <label>Line Ruler</label>
+      <button class="toggle" id="toggle-ruler" role="switch" aria-checked="false"><span class="toggle-thumb"></span></button>
+    </div>
+    <div class="slider-row">
+      <label>TTS Speed</label>
+      <div class="slider-control">
+        <button class="step-btn" data-action="ttsSpeed" data-dir="-1">−</button>
+        <span id="ttsSpeed-value" class="slider-value">1.0x</span>
+        <button class="step-btn" data-action="ttsSpeed" data-dir="1">+</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Quick Notes -->
+  <section class="control-group">
+    <h3 class="group-title">Quick Notes</h3>
+    <textarea id="quick-notes" class="quick-notes-input" placeholder="Jot down notes while studying... Saved automatically." rows="3"></textarea>
+    <div class="notes-actions">
+      <button id="btn-copy-notes" class="notes-btn" title="Copy notes">Copy</button>
+      <button id="btn-clear-notes" class="notes-btn" title="Clear notes">Clear</button>
+      <button id="btn-send-dashboard" class="notes-btn primary" title="Send to AURA Dashboard">Send to Dashboard</button>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
   <!-- Color Filters -->
   <section class="control-group">
     <h3 class="group-title">Color Vision</h3>

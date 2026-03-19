@@ -8,48 +8,48 @@ import { Badge } from "@/components/ui/Badge";
 
 const captionLines = [
   {
-    speaker: "SPEAKER 1",
-    text: '"The meeting starts at 3pm and we\'ll review the quarterly results then."',
+    speaker: "PROFESSOR",
+    text: '"Today we\'ll cover the fundamentals of cellular respiration and ATP synthesis."',
   },
   {
-    speaker: "SPEAKER 2",
-    text: '"Perfect, I\'ll prepare the presentation slides by then."',
+    speaker: "STUDENT",
+    text: '"Could you repeat the difference between aerobic and anaerobic respiration?"',
   },
   {
-    speaker: "SPEAKER 1",
-    text: '"Great — also, could you bring the accessibility audit report?"',
+    speaker: "PROFESSOR",
+    text: '"Of course — aerobic requires oxygen, anaerobic does not. Let me show you on the board."',
   },
   {
-    speaker: "SPEAKER 2",
-    text: '"Of course. I\'ll include the WCAG compliance summary as well."',
+    speaker: "AURA AI",
+    text: '"Key point saved. Summary: ATP synthesis comparison — aerobic vs anaerobic."',
   },
 ];
 
 const sceneDetections = [
   [
-    { icon: "✓", label: "Park bench", detail: "3m ahead", color: "text-emerald-400" },
-    { icon: "✓", label: "Person walking", detail: "left", color: "text-emerald-400" },
-    { icon: "✓", label: "Clear pathway", detail: "forward", color: "text-emerald-400" },
-    { icon: "⚠", label: "Bicycle approaching", detail: "right", color: "text-amber-400" },
+    { icon: "✓", label: "Whiteboard text", detail: "reading...", color: "text-emerald-400" },
+    { icon: "✓", label: "Diagram detected", detail: "biology", color: "text-emerald-400" },
+    { icon: "✓", label: "Professor gesture", detail: "pointing", color: "text-emerald-400" },
+    { icon: "ℹ", label: "Slide change", detail: "slide 12", color: "text-blue-400" },
   ],
   [
-    { icon: "✓", label: "Crosswalk signal", detail: "walk now", color: "text-emerald-400" },
-    { icon: "✓", label: "Bus stop", detail: "15m ahead", color: "text-emerald-400" },
-    { icon: "⚠", label: "Wet floor sign", detail: "nearby", color: "text-amber-400" },
-    { icon: "✓", label: "Clear path", detail: "ahead", color: "text-emerald-400" },
+    { icon: "✓", label: "Textbook page", detail: "Ch. 5 p.142", color: "text-emerald-400" },
+    { icon: "✓", label: "Formula detected", detail: "E=mc²", color: "text-emerald-400" },
+    { icon: "⚠", label: "Small print", detail: "zooming", color: "text-amber-400" },
+    { icon: "✓", label: "Footnotes", detail: "3 found", color: "text-emerald-400" },
   ],
   [
-    { icon: "✓", label: "Door handle", detail: "1.2m ahead", color: "text-emerald-400" },
-    { icon: "✓", label: "Exit sign", detail: "above", color: "text-emerald-400" },
-    { icon: "✓", label: "Step down", detail: "0.5m ahead", color: "text-emerald-400" },
-    { icon: "ℹ", label: "Café entrance", detail: "right", color: "text-blue-400" },
+    { icon: "✓", label: "Lab equipment", detail: "microscope", color: "text-emerald-400" },
+    { icon: "✓", label: "Safety sign", detail: "goggles req.", color: "text-emerald-400" },
+    { icon: "✓", label: "Sample label", detail: "reading...", color: "text-emerald-400" },
+    { icon: "ℹ", label: "Instructions", detail: "step 3 of 8", color: "text-blue-400" },
   ],
 ];
 
 const sceneDescriptions = [
-  '"Safe to walk forward. Bicycle approaching from right."',
-  '"Walk signal active. Bus stop 15 meters ahead."',
-  '"Door ahead at 1.2 meters. Watch for step down."',
+  '"Whiteboard shows cell diagram. Professor pointing to mitochondria."',
+  '"Textbook Chapter 5, page 142. Formula: E=mc². 3 footnotes detected."',
+  '"Lab microscope ahead. Safety goggles required. Reading sample label."',
 ];
 
 export function Hero() {
@@ -122,12 +122,12 @@ export function Hero() {
             <div
               className="glass-card rounded-2xl overflow-hidden w-full max-w-xs mx-auto animate-float"
               style={{ animationDelay: "1s" }}
-              aria-label="Live Captions demo panel"
+              aria-label="Lecture Captions demo panel"
             >
               <div className="px-4 py-3 border-b border-[#1F1F28] flex items-center gap-2">
                 <Mic size={14} className="text-indigo-400" />
                 <span className="text-sm font-semibold text-[#F8F8FC]">
-                  Live Captions
+                  Lecture Captions
                 </span>
                 <div className="ml-auto flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
@@ -161,7 +161,7 @@ export function Hero() {
                     <span key={i} className="wave-bar" style={{ height: "4px" }} />
                   ))}
                 </div>
-                <span className="text-xs text-[#5A5A6E]">2 speakers detected</span>
+                <span className="text-xs text-[#5A5A6E]">Lecture in progress</span>
               </div>
             </div>
           </motion.div>
@@ -175,7 +175,7 @@ export function Hero() {
             >
               <Badge variant="accent" className="mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse inline-block mr-1.5" />
-                AI-Powered Accessibility Platform
+                The Ultimate Education Platform for the Impaired
               </Badge>
             </motion.div>
 
@@ -186,7 +186,7 @@ export function Hero() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3, delay: 0.4 }}
             >
-              {["One", "intelligent", "layer", "for", "a", "more"].map((word, i) => (
+              {["Every", "student", "deserves", "to"].map((word, i) => (
                 <motion.span
                   key={i}
                   initial={{ opacity: 0, y: 30 }}
@@ -202,14 +202,14 @@ export function Hero() {
                 </motion.span>
               ))}
               {" "}
-              {["accessible", "world."].map((word, i) => (
+              {["learn", "without", "limits."].map((word, i) => (
                 <motion.span
                   key={i}
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
                     duration: 0.5,
-                    delay: 0.4 + (6 + i) * 0.07,
+                    delay: 0.4 + (4 + i) * 0.07,
                     ease: [0.25, 0.46, 0.45, 0.94],
                   }}
                   className={`inline-block mr-[0.2em] ${i === 0 ? "gradient-text" : "text-[#F8F8FC]"}`}
@@ -225,9 +225,9 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.9 }}
               className="text-lg sm:text-xl text-[#9898A8] leading-relaxed max-w-2xl mb-10 text-balance"
             >
-              AURA combines AI vision assistance, real-time captions, voice
-              control, and web accessibility tools into one seamless experience —
-              built for the 1.3 billion people who deserve better.
+              AURA combines live lecture captions, AI-powered note-taking, vision assistance,
+              and accessible learning tools into one platform — purpose-built so
+              students with disabilities never fall behind in the classroom.
             </motion.p>
 
             {/* CTAs */}
@@ -269,9 +269,9 @@ export function Hero() {
               className="flex flex-wrap items-center justify-center gap-0 divide-x divide-[#1F1F28]"
             >
               {[
-                { number: "2.2B+", label: "vision impaired", sub: "people" },
-                { number: "430M+", label: "hearing loss", sub: "people" },
-                { number: "1 platform", label: "for all", sub: "" },
+                { number: "240M+", label: "students with disabilities", sub: "" },
+                { number: "90%", label: "lack proper learning tools", sub: "" },
+                { number: "1 platform", label: "built for them", sub: "" },
               ].map((stat, i) => (
                 <div
                   key={i}
@@ -297,12 +297,12 @@ export function Hero() {
             <div
               className="glass-card rounded-2xl overflow-hidden w-full max-w-xs mx-auto animate-float"
               style={{ animationDelay: "3s" }}
-              aria-label="Scene Analysis demo panel"
+              aria-label="Classroom Vision demo panel"
             >
               <div className="px-4 py-3 border-b border-[#1F1F28] flex items-center gap-2">
                 <Eye size={14} className="text-indigo-400" />
                 <span className="text-sm font-semibold text-[#F8F8FC]">
-                  Scene Analysis
+                  Classroom Vision
                 </span>
                 <div className="ml-auto">
                   <Badge variant="success" dot className="text-[10px] py-0.5">Active</Badge>

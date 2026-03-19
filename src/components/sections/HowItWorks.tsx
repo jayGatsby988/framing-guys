@@ -9,9 +9,9 @@ const steps = [
   {
     number: "01",
     icon: Camera,
-    title: "Perceive",
+    title: "Capture",
     description:
-      "AURA continuously captures input from your camera, microphone, screen, and environment — processing sensory data in real time.",
+      "AURA listens to lectures, reads whiteboards, and captures classroom content in real-time using your device's microphone and camera.",
     color: "text-violet-400",
     bgColor: "bg-violet-500/10",
     borderColor: "border-violet-500/20",
@@ -19,9 +19,9 @@ const steps = [
   {
     number: "02",
     icon: Brain,
-    title: "Understand",
+    title: "Process",
     description:
-      "Advanced AI models process and interpret visual, audio, and contextual data simultaneously — understanding scenes, speech, and intent.",
+      "AI models transcribe speech, recognize text in images, identify key concepts, and structure the content for easy learning and review.",
     color: "text-blue-400",
     bgColor: "bg-blue-500/10",
     borderColor: "border-blue-500/20",
@@ -29,9 +29,9 @@ const steps = [
   {
     number: "03",
     icon: Settings2,
-    title: "Adapt",
+    title: "Personalize",
     description:
-      "Content, interfaces, and environments are dynamically transformed to match your specific accessibility needs and preferences.",
+      "Content adapts to each student's needs — larger text, high contrast, audio descriptions, simplified language, or whatever makes learning accessible.",
     color: "text-indigo-400",
     bgColor: "bg-indigo-500/10",
     borderColor: "border-indigo-500/20",
@@ -39,9 +39,9 @@ const steps = [
   {
     number: "04",
     icon: MessageCircle,
-    title: "Guide",
+    title: "Deliver",
     description:
-      "AURA delivers clear, helpful output through your preferred channel — audio, haptics, captions, or visual overlays.",
+      "Students receive captions, notes, summaries, and study materials through their preferred format — text, audio, or visual overlays.",
     color: "text-emerald-400",
     bgColor: "bg-emerald-500/10",
     borderColor: "border-emerald-500/20",
@@ -64,8 +64,8 @@ export function HowItWorks() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           badge="How It Works"
-          title="Intelligence that works for you"
-          subtitle="AURA's four-stage AI pipeline perceives your world, understands what matters, adapts to your needs, and guides you clearly."
+          title="From lecture hall to study session"
+          subtitle="AURA's AI pipeline captures classroom content, processes it intelligently, personalizes it for your needs, and delivers it in the format that works best for you."
           align="center"
           id="how-it-works-heading"
           className="mb-20"

@@ -8,33 +8,44 @@ import { Badge } from "@/components/ui/Badge";
 
 const features = [
   {
-    icon: Eye,
-    title: "Vision Assist",
-    description:
-      "Real-time AI-powered scene understanding that describes your surroundings, reads text, identifies objects, and guides navigation with natural language.",
-    tag: "Computer Vision",
-    color: "text-violet-400",
-    bgColor: "bg-violet-500/10",
-    borderColor: "border-violet-500/20",
-    gradient: "from-violet-600/20 to-transparent",
-  },
-  {
     icon: Captions,
-    title: "Live Captions",
+    title: "Lecture Captions",
     description:
-      "Real-time speech-to-text transcription with speaker differentiation, sound event detection, and support for 40+ languages.",
-    tag: "Speech Recognition",
+      "Real-time speech-to-text that captures every word of lectures, discussions, and Q&A — with speaker labels so you always know who's talking. Inspired by AccessHear.",
+    tag: "Live Transcription",
     color: "text-blue-400",
     bgColor: "bg-blue-500/10",
     borderColor: "border-blue-500/20",
     gradient: "from-blue-600/20 to-transparent",
   },
   {
-    icon: AudioLines,
-    title: "Audio Tools",
+    icon: Bot,
+    title: "AI Lecture Notes",
     description:
-      "Convert any audio content — meetings, podcasts, videos — into searchable text with key highlight extraction and smart summaries.",
-    tag: "Audio Processing",
+      "Record lectures and let AI generate structured notes with key points, summaries, and action items. Never miss important content — even if you can't write fast enough.",
+    tag: "Smart Notes",
+    color: "text-amber-400",
+    bgColor: "bg-amber-500/10",
+    borderColor: "border-amber-500/20",
+    gradient: "from-amber-600/20 to-transparent",
+  },
+  {
+    icon: Eye,
+    title: "Vision Assist",
+    description:
+      "AI-powered reading of whiteboards, textbooks, slides, and lab materials. Describes diagrams, reads small print, and helps visually impaired students access all classroom content.",
+    tag: "Classroom Vision",
+    color: "text-violet-400",
+    bgColor: "bg-violet-500/10",
+    borderColor: "border-violet-500/20",
+    gradient: "from-violet-600/20 to-transparent",
+  },
+  {
+    icon: AudioLines,
+    title: "Study Audio Tools",
+    description:
+      "Convert recorded lectures, podcasts, and study materials into searchable text with AI-extracted highlights, flashcard generation, and smart study summaries.",
+    tag: "Audio Learning",
     color: "text-cyan-400",
     bgColor: "bg-cyan-500/10",
     borderColor: "border-cyan-500/20",
@@ -42,9 +53,9 @@ const features = [
   },
   {
     icon: Globe,
-    title: "Web Overlay",
+    title: "Accessible Web Learning",
     description:
-      "Instantly improve any website's accessibility with one click — enhanced contrast, resizable text, keyboard navigation, and alt text.",
+      "Make any online course, LMS, or educational website instantly accessible — enhanced contrast, readable fonts, keyboard nav, and alt text for every image.",
     tag: "Browser Extension",
     color: "text-indigo-400",
     bgColor: "bg-indigo-500/10",
@@ -53,25 +64,14 @@ const features = [
   },
   {
     icon: Mic,
-    title: "Voice Control",
+    title: "Voice Navigation",
     description:
-      "Navigate apps, browse the web, and control your device with natural spoken commands — hands-free and fully customizable.",
+      "Control your learning tools, navigate study materials, and interact with the platform hands-free — essential for students with motor impairments.",
     tag: "Voice Interface",
     color: "text-emerald-400",
     bgColor: "bg-emerald-500/10",
     borderColor: "border-emerald-500/20",
     gradient: "from-emerald-600/20 to-transparent",
-  },
-  {
-    icon: Bot,
-    title: "AI Companion",
-    description:
-      "Your always-available intelligent assistant that answers questions, reads content, describes images, and guides you through any task.",
-    tag: "AI Assistant",
-    color: "text-amber-400",
-    bgColor: "bg-amber-500/10",
-    borderColor: "border-amber-500/20",
-    gradient: "from-amber-600/20 to-transparent",
   },
 ];
 
@@ -107,9 +107,9 @@ export function FeaturesOverview() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          badge="Capabilities"
-          title="Everything you need, in one platform"
-          subtitle="AURA integrates six powerful accessibility tools into a single, seamless experience. No switching between apps. No compromises."
+          badge="Learning Tools"
+          title="Every tool an impaired student needs"
+          subtitle="AURA integrates six powerful learning and accessibility tools into one platform — designed for how students actually learn in classrooms, labs, and online."
           align="center"
           id="features-heading"
           className="mb-16"

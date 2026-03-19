@@ -11,10 +11,10 @@ import { useSpeechRecognition } from "@/lib/hooks/useSpeechRecognition";
 const mockMessages = [
   {
     id: 1,
-    speaker: "Alex M.",
+    speaker: "Prof. Chen",
     color: "bg-violet-500",
     time: "2:31 PM",
-    text: "Good afternoon everyone. Let's start with the Q3 accessibility audit results.",
+    text: "Good afternoon everyone. Today we'll continue with cellular biology, focusing on mitochondrial function.",
     type: "speech",
   },
   {
@@ -26,18 +26,18 @@ const mockMessages = [
   },
   {
     id: 3,
-    speaker: "Jordan K.",
+    speaker: "Student",
     color: "bg-blue-500",
     time: "2:32 PM",
-    text: "We've made significant progress. Our WCAG 2.1 AA compliance is now at 94%.",
+    text: "Could you explain how ATP synthase works in the electron transport chain?",
     type: "speech",
   },
   {
     id: 4,
-    speaker: "Alex M.",
+    speaker: "Prof. Chen",
     color: "bg-violet-500",
     time: "2:33 PM",
-    text: "That's great news. What were the main improvements we made this quarter?",
+    text: "Great question. ATP synthase uses the proton gradient to drive phosphorylation of ADP to ATP.",
     type: "speech",
   },
   {
@@ -49,21 +49,21 @@ const mockMessages = [
   },
   {
     id: 6,
-    speaker: "Jordan K.",
-    color: "bg-blue-500",
+    speaker: "Prof. Chen",
+    color: "bg-violet-500",
     time: "2:34 PM",
-    text: "Keyboard navigation, color contrast updates, and screen reader optimization were the biggest wins.",
+    text: "The key takeaway is that each glucose molecule yields approximately 36-38 ATP molecules through oxidative phosphorylation.",
     type: "speech",
   },
 ];
 
 const benefits = [
-  "99.2% speech recognition accuracy",
-  "Automatic speaker identification",
-  "Real-time sound event detection",
-  "40+ languages supported",
-  "Offline mode available",
-  "Exportable transcripts in multiple formats",
+  "99.2% speech recognition accuracy in lecture settings",
+  "Automatic professor and student speaker identification",
+  "AI-generated lecture summaries and key points",
+  "40+ languages supported for international students",
+  "Export notes as study guides and flashcards",
+  "Seamless integration with AURA Lecture Notes",
 ];
 
 export function LiveCaptionsDemo() {
@@ -126,9 +126,9 @@ export function LiveCaptionsDemo() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          badge="Live Captions"
-          title="Hear every word. Follow every conversation."
-          subtitle="Real-time speech transcription that identifies speakers, detects sound events, and keeps you connected to the world around you."
+          badge="Lecture Captions"
+          title="Hear every word of every lecture."
+          subtitle="Real-time speech transcription built for the classroom — captures professors, student questions, and discussions so no one falls behind. Inspired by AccessHear."
           align="center"
           id="captions-heading"
           className="mb-16"
@@ -265,9 +265,9 @@ export function LiveCaptionsDemo() {
                   AI Summary
                 </p>
                 <p className="text-xs text-[#9898A8] leading-relaxed">
-                  Team meeting discussing Q3 accessibility audit. 94% WCAG 2.1 AA
-                  compliance achieved. Key improvements: keyboard navigation,
-                  color contrast, screen reader optimization.
+                  Biology lecture on cellular respiration. Key topic: ATP synthase
+                  and oxidative phosphorylation. Each glucose yields 36-38 ATP.
+                  Question asked about electron transport chain.
                 </p>
               </div>
 
@@ -306,15 +306,15 @@ export function LiveCaptionsDemo() {
             className="space-y-8"
           >
             <div>
-              <Badge variant="accent" className="mb-5">Live Speech Recognition</Badge>
+              <Badge variant="accent" className="mb-5">Classroom Speech Recognition</Badge>
               <h3 className="text-2xl font-bold text-[#F8F8FC] mb-4">
-                Never miss a word again
+                Never miss a word of a lecture
               </h3>
               <p className="text-[#9898A8] leading-relaxed">
-                AURA&apos;s Live Captions technology uses state-of-the-art speech
-                recognition to transcribe conversations in real time — whether
-                you&apos;re in a meeting, watching a video, or walking through a
-                busy environment.
+                AURA&apos;s Lecture Captions use state-of-the-art speech
+                recognition to transcribe every word in real time — whether
+                you&apos;re in a lecture hall, a study group, or an online class.
+                Built from the same technology as AccessHear.
               </p>
             </div>
 

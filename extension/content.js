@@ -185,10 +185,56 @@ function applyStyles(state) {
     `;
   }
 
+  // === Education Tools ===
+  // Focus Mode - dim distracting elements
+  if (state.focusMode) {
+    css += `
+      header, footer, nav, aside, [role="banner"], [role="complementary"],
+      .sidebar, .nav, .ad, .advertisement, .social-share,
+      [class*="cookie"], [class*="banner"], [class*="popup"],
+      [class*="sidebar"], [class*="widget"], [class*="ad-"] {
+        opacity: 0.15 !important;
+        transition: opacity 0.3s !important;
+      }
+      header:hover, footer:hover, nav:hover, aside:hover,
+      .sidebar:hover, .nav:hover {
+        opacity: 1 !important;
+      }
+      main, article, [role="main"], .content, .post, .article {
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 0 60px rgba(99,102,241,0.08);
+      }
+    `;
+  }
+  // Highlight Headings - make h1-h6 stand out
+  if (state.highlightHeadings) {
+    css += `
+      h1, h2, h3, h4, h5, h6 {
+        background: linear-gradient(90deg, rgba(99,102,241,0.15), transparent) !important;
+        border-left: 3px solid #6366F1 !important;
+        padding-left: 12px !important;
+        margin-left: -15px !important;
+        border-radius: 0 4px 4px 0 !important;
+      }
+    `;
+  }
+  // Line Ruler - persistent horizontal line that follows scroll position
+  if (state.lineRuler) {
+    css += `
+      #aura-line-ruler {
+        display: block !important;
+      }
+    `;
+    createLineRuler();
+  } else {
+    removeLineRuler();
+  }
+
   // Don't hide AURA's own elements
   css += `
     #${AURA_FAB_ID}, #${AURA_FAB_ID} *, #${AURA_PANEL_ID}, #${AURA_PANEL_ID} *,
-    #${AURA_OVERLAY_ID}, #${AURA_OVERLAY_ID} * {
+    #${AURA_OVERLAY_ID}, #${AURA_OVERLAY_ID} *, #aura-line-ruler {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
       letter-spacing: normal !important;
       line-height: normal !important;
@@ -214,6 +260,43 @@ function removeStyles() {
   const svg = document.getElementById('aura-svg-filters');
   if (svg) svg.remove();
   removeCaptionOverlay();
+  removeLineRuler();
+}
+
+// === Line Ruler (Education Tool) ===
+function createLineRuler() {
+  if (document.getElementById('aura-line-ruler')) return;
+  const ruler = document.createElement('div');
+  ruler.id = 'aura-line-ruler';
+  ruler.style.cssText = `
+    position: fixed; left: 0; right: 0; height: 40px; z-index: 2147483640;
+    pointer-events: none; top: 50%;
+    background: linear-gradient(180deg,
+      rgba(99,102,241,0.08) 0%,
+      transparent 15%,
+      transparent 85%,
+      rgba(99,102,241,0.08) 100%);
+    border-top: 2px solid rgba(99,102,241,0.25);
+    border-bottom: 2px solid rgba(99,102,241,0.25);
+    transition: top 0.05s ease-out;
+  `;
+  document.body.appendChild(ruler);
+
+  // Follow mouse
+  document.addEventListener('mousemove', _auraRulerFollow);
+}
+
+function _auraRulerFollow(e) {
+  const ruler = document.getElementById('aura-line-ruler');
+  if (ruler) {
+    ruler.style.top = (e.clientY - 20) + 'px';
+  }
+}
+
+function removeLineRuler() {
+  const ruler = document.getElementById('aura-line-ruler');
+  if (ruler) ruler.remove();
+  document.removeEventListener('mousemove', _auraRulerFollow);
 }
 
 // === Read Aloud ===

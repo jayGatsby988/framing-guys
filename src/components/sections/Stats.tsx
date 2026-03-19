@@ -14,31 +14,31 @@ interface StatItem {
 
 const stats: StatItem[] = [
   {
-    value: 2.2,
-    suffix: "B+",
-    label: "People with vision impairment",
-    sublabel: "worldwide — a number growing every year",
+    value: 240,
+    suffix: "M+",
+    label: "Students with disabilities worldwide",
+    sublabel: "who deserve equal access to education",
     color: "text-violet-400",
   },
   {
-    value: 430,
-    suffix: "M+",
-    label: "People with hearing loss",
-    sublabel: "affecting 1 in 20 people globally",
+    value: 34,
+    suffix: "%",
+    label: "Lower graduation rate for disabled students",
+    sublabel: "compared to their non-disabled peers",
     color: "text-blue-400",
   },
   {
-    value: 97.4,
+    value: 90,
     suffix: "%",
-    label: "Of websites fail accessibility tests",
-    sublabel: "making most of the web inaccessible",
+    label: "Of ed-tech lacks accessibility features",
+    sublabel: "leaving most learning tools unusable",
     color: "text-red-400",
   },
   {
-    value: 71,
-    suffix: "%",
-    label: "Leave inaccessible sites immediately",
-    sublabel: "representing $6.9B in lost revenue",
+    value: 3,
+    suffix: "x",
+    label: "More likely to drop out of college",
+    sublabel: "when assistive tools aren't available",
     color: "text-amber-400",
   },
 ];
@@ -111,8 +111,8 @@ export function Stats() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           badge="The Scale"
-          title="The numbers that drive our mission"
-          subtitle="These aren't just statistics. They represent real people whose lives are limited by a lack of accessible technology."
+          title="The education gap we're closing"
+          subtitle="These aren't just statistics. They represent students who are being left behind by an education system that wasn't built for them."
           align="center"
           id="stats-heading"
           className="mb-16"
@@ -155,7 +155,7 @@ export function Stats() {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="text-center text-[#9898A8] mt-12 max-w-xl mx-auto"
         >
-          AURA exists to change these numbers. One accessible experience at a time.
+          AURA exists to close this gap. One accessible classroom at a time.
         </motion.p>
       </div>
     </section>

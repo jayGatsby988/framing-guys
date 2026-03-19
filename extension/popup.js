@@ -17,6 +17,11 @@ const defaults = {
   readingGuide: false,
   highlightLinks: false,
   selectTTS: false,
+  // Education tools
+  focusMode: false,
+  highlightHeadings: false,
+  lineRuler: false,
+  ttsSpeed: 2,        // index into ttsSpeedValues
 };
 
 const fontSizeSteps = [80, 90, 100, 110, 120, 130, 150, 175, 200];
@@ -24,6 +29,8 @@ const lineHeightLabels = ['Tight', 'Normal', 'Relaxed', 'Loose', 'Extra'];
 const lineHeightValues = [1.2, 1.5, 1.8, 2.2, 2.6];
 const letterSpacingLabels = ['Normal', '+1px', '+2px', '+3px', '+4px'];
 const letterSpacingValues = [0, 1, 2, 3, 4];
+const ttsSpeedLabels = ['0.5x', '0.75x', '1.0x', '1.25x', '1.5x', '2.0x'];
+const ttsSpeedValues = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
 
 // Dashboard URL — update this to your deployed site
 const DASHBOARD_URL = 'https://aura-accessibility.vercel.app/dashboard';
@@ -80,6 +87,23 @@ function render() {
   document.getElementById('btn-reading-guide').classList.toggle('active', state.readingGuide);
   document.getElementById('btn-highlight-links').classList.toggle('active', state.highlightLinks);
   document.getElementById('btn-text-select').classList.toggle('active', state.selectTTS);
+
+  // Education tools
+  setToggle('toggle-focus-mode', state.focusMode);
+  setToggle('toggle-headings', state.highlightHeadings);
+  setToggle('toggle-ruler', state.lineRuler);
+
+  // TTS Speed
+  const ttsIdx = Math.max(0, Math.min(ttsSpeedLabels.length - 1, state.ttsSpeed));
+  document.getElementById('ttsSpeed-value').textContent = ttsSpeedLabels[ttsIdx];
+
+  // Quick Notes
+  chrome.storage.local.get('auraQuickNotes', (result) => {
+    const notesEl = document.getElementById('quick-notes');
+    if (notesEl && result.auraQuickNotes && !notesEl._userEdited) {
+      notesEl.value = result.auraQuickNotes;
+    }
+  });
 }
 
 function setToggle(id, value) {
@@ -117,6 +141,8 @@ document.querySelectorAll('.step-btn').forEach(btn => {
       state.lineHeight = Math.max(-1, Math.min(lineHeightLabels.length - 2, state.lineHeight + dir));
     } else if (action === 'letterSpacing') {
       state.letterSpacing = Math.max(0, Math.min(letterSpacingValues.length - 1, state.letterSpacing + dir));
+    } else if (action === 'ttsSpeed') {
+      state.ttsSpeed = Math.max(0, Math.min(ttsSpeedValues.length - 1, state.ttsSpeed + dir));
     }
 
     save();
@@ -220,6 +246,53 @@ document.getElementById('btn-text-select').addEventListener('click', () => {
 // Dashboard - open in new tab
 document.getElementById('btn-dashboard').addEventListener('click', () => {
   chrome.tabs.create({ url: DASHBOARD_URL });
+});
+
+// Education Tools
+const eduToggleMap = {
+  'toggle-focus-mode': 'focusMode',
+  'toggle-headings': 'highlightHeadings',
+  'toggle-ruler': 'lineRuler',
+};
+
+Object.entries(eduToggleMap).forEach(([id, key]) => {
+  document.getElementById(id).addEventListener('click', () => {
+    state[key] = !state[key];
+    save();
+    render();
+  });
+});
+
+// Quick Notes - auto-save
+const notesEl = document.getElementById('quick-notes');
+notesEl.addEventListener('input', () => {
+  notesEl._userEdited = true;
+  chrome.storage.local.set({ auraQuickNotes: notesEl.value });
+});
+
+// Copy notes
+document.getElementById('btn-copy-notes').addEventListener('click', () => {
+  navigator.clipboard.writeText(notesEl.value).then(() => {
+    const btn = document.getElementById('btn-copy-notes');
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+  });
+});
+
+// Clear notes
+document.getElementById('btn-clear-notes').addEventListener('click', () => {
+  notesEl.value = '';
+  chrome.storage.local.set({ auraQuickNotes: '' });
+});
+
+// Send notes to dashboard
+document.getElementById('btn-send-dashboard').addEventListener('click', () => {
+  const notes = notesEl.value;
+  if (notes.trim()) {
+    chrome.tabs.create({ url: DASHBOARD_URL + '/notes?quicknote=' + encodeURIComponent(notes) });
+  } else {
+    chrome.tabs.create({ url: DASHBOARD_URL + '/notes' });
+  }
 });
 
 // Reset

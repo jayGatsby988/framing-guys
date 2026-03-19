@@ -116,18 +116,19 @@ export function Navbar() {
             {/* CTA */}
             <div className="hidden lg:flex items-center gap-3">
               <Link
-                href="/dashboard"
+                href="/login"
                 className="px-4 py-2 text-sm font-medium text-[#9898A8] hover:text-[#F8F8FC] transition-colors rounded-lg"
               >
-                Dashboard
+                Sign In
               </Link>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => handleNavClick("#contact")}
-              >
-                Get Early Access
-              </Button>
+              <Link href="/signup">
+                <Button
+                  variant="primary"
+                  size="sm"
+                >
+                  Get Started Free
+                </Button>
+              </Link>
             </div>
 
             {/* Mobile Menu Button */}
@@ -193,20 +194,25 @@ export function Navbar() {
 
               <div className="p-4 border-t border-[#1F1F28] space-y-2">
                 <Link
-                  href="/dashboard"
+                  href="/login"
                   className="block w-full text-center px-4 py-3 rounded-xl text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 text-sm font-medium hover:bg-indigo-500/20 transition-colors"
                   onClick={() => setMobileOpen(false)}
                 >
-                  Open Dashboard
+                  Sign In
                 </Link>
-                <Button
-                  variant="primary"
-                  size="md"
-                  className="w-full"
-                  onClick={() => handleNavClick("#contact")}
+                <Link
+                  href="/signup"
+                  className="block w-full"
+                  onClick={() => setMobileOpen(false)}
                 >
-                  Get Early Access
-                </Button>
+                  <Button
+                    variant="primary"
+                    size="md"
+                    className="w-full"
+                  >
+                    Get Started Free
+                  </Button>
+                </Link>
               </div>
             </motion.div>
           </>

@@ -9,23 +9,26 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "AURA — Adaptive Universal Responsive Assistant",
+  title: "AURA — The Ultimate Education Platform for the Impaired",
   description:
-    "AI-powered accessibility platform that helps people with vision and hearing impairments interact with the world seamlessly.",
+    "AI-powered education platform for students with disabilities. Live lecture captions, AI note-taking, vision assistance, and accessible learning tools — all in one place.",
   keywords: [
-    "accessibility",
+    "accessible education",
     "AI",
-    "vision impairment",
-    "hearing impairment",
+    "disability",
+    "lecture captions",
     "assistive technology",
     "live captions",
-    "voice control",
-    "screen reader",
+    "lecture notes",
+    "vision impairment",
+    "hearing impairment",
+    "AccessHear",
+    "education accessibility",
   ],
   openGraph: {
-    title: "AURA — Adaptive Universal Responsive Assistant",
+    title: "AURA — The Ultimate Education Platform for the Impaired",
     description:
-      "One intelligent layer for a more accessible world. AI-powered vision assist, live captions, voice control, and web accessibility tools.",
+      "Every student deserves to learn without limits. Live lecture captions, AI note-taking, vision assistance, and accessible learning tools for students with disabilities.",
     type: "website",
   },
 };

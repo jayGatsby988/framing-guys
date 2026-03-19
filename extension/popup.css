@@ -6,7 +6,7 @@
 
 body {
   width: 320px;
-  max-height: 560px;
+  max-height: 600px;
   overflow-y: auto;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: #0A0A10;
@@ -257,4 +257,58 @@ body::-webkit-scrollbar-thumb {
   background: rgba(239,68,68,0.1);
   border-color: rgba(239,68,68,0.2);
   color: #F87171;
+}
+
+/* Quick Notes */
+.quick-notes-input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  color: #E8E8F0;
+  font-size: 11px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 50px;
+  max-height: 120px;
+  line-height: 1.5;
+  transition: border-color 0.2s;
+}
+.quick-notes-input::placeholder {
+  color: rgba(255,255,255,0.25);
+}
+.quick-notes-input:focus {
+  outline: none;
+  border-color: rgba(99,102,241,0.5);
+}
+
+.notes-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+.notes-btn {
+  flex: 1;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.45);
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.notes-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.7);
+}
+.notes-btn.primary {
+  background: rgba(99,102,241,0.15);
+  border-color: rgba(99,102,241,0.25);
+  color: #A5B4FC;
+}
+.notes-btn.primary:hover {
+  background: rgba(99,102,241,0.25);
+  color: #C7D2FE;
 }

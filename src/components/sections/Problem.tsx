@@ -8,33 +8,33 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 const problems = [
   {
     icon: Globe,
-    title: "Digital Exclusion",
+    title: "Inaccessible Classrooms",
     description:
-      "97.4% of the world's top websites fail basic accessibility standards. Millions are locked out of information, services, and opportunities every single day.",
-    stat: "97.4%",
-    statLabel: "of websites fail WCAG standards",
+      "Most lecture halls, online courses, and learning platforms are built without accessibility in mind. Students with disabilities are forced to rely on outdated tools or fall behind entirely.",
+    stat: "90%",
+    statLabel: "of ed-tech tools lack proper accessibility",
     color: "text-red-400",
     bgColor: "bg-red-500/10",
     borderColor: "border-red-500/20",
   },
   {
     icon: MessageSquareOff,
-    title: "Social Barriers",
+    title: "Missed Lectures",
     description:
-      "Conversations, meetings, events, and phone calls become exhausting obstacles for people with hearing impairments, leading to isolation and missed opportunities.",
-    stat: "430M+",
-    statLabel: "people with hearing impairment",
+      "Students with hearing impairments miss critical lecture content, class discussions, and Q&A sessions. Without real-time captions and AI notes, every class is an uphill battle.",
+    stat: "70%",
+    statLabel: "of deaf students report missing lecture content",
     color: "text-amber-400",
     bgColor: "bg-amber-500/10",
     borderColor: "border-amber-500/20",
   },
   {
     icon: Navigation,
-    title: "Independence Lost",
+    title: "Learning Materials Out of Reach",
     description:
-      "Simple tasks like navigating a new space, reading a sign, or crossing the street become dangerous without proper assistance for people with vision impairments.",
-    stat: "2.2B+",
-    statLabel: "people with vision impairment",
+      "Textbooks, whiteboards, lab instructions, and handouts are visual-first. Students with vision impairments can't read the board, examine diagrams, or navigate campus independently.",
+    stat: "240M+",
+    statLabel: "students worldwide with disabilities",
     color: "text-blue-400",
     bgColor: "bg-blue-500/10",
     borderColor: "border-blue-500/20",
@@ -74,8 +74,8 @@ export function Problem() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           badge="The Problem"
-          title="1 in 4 adults live with a disability."
-          subtitle="Most digital products aren't built for them. This isn't just an inconvenience — it's a systemic failure."
+          title="Education wasn't built for every student."
+          subtitle="Students with disabilities are systematically excluded from classrooms, lectures, and learning materials — not because they can't learn, but because the tools weren't designed for them."
           align="center"
           id="problem-heading"
           className="mb-16"
@@ -145,18 +145,18 @@ export function Problem() {
           />
           <blockquote className="relative">
             <p className="text-4xl sm:text-5xl font-bold text-[#F8F8FC] mb-3">
-              <span className="gradient-text">97.4%</span>
+              <span className="gradient-text">Only 1 in 10</span>
             </p>
             <p className="text-xl text-[#9898A8] max-w-2xl mx-auto">
-              of the world&apos;s top one million websites fail{" "}
+              students with disabilities have access to the{" "}
               <span className="text-[#F8F8FC] font-medium">
-                basic accessibility tests
+                assistive technology they need
               </span>
-              . Millions of people face digital barriers every day.
+              {" "}to participate fully in higher education.
             </p>
             <footer className="mt-4">
               <cite className="text-sm text-[#5A5A6E] not-italic">
-                — WebAIM Million Report, 2024
+                — WHO &amp; UNESCO Global Report on Assistive Technology, 2024
               </cite>
             </footer>
           </blockquote>

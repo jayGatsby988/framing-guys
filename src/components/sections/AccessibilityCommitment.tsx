@@ -72,8 +72,8 @@ export function AccessibilityCommitment() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           badge="Our Commitment"
-          title="We build for everyone — including this website"
-          subtitle="AURA doesn't just talk about accessibility. Our own platform is a living demonstration of what accessible design looks like in practice."
+          title="We build for every learner — including on this website"
+          subtitle="AURA doesn't just talk about accessible education. Our own platform is a living demonstration of what inclusive learning technology looks like in practice."
           align="center"
           id="accessibility-heading"
           className="mb-16"

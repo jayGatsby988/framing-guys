@@ -13,26 +13,26 @@ const testimonials = [
     avatar: "MR",
     avatarColor: "bg-violet-600",
     quote:
-      "As someone with moderate hearing loss, AURA has completely transformed my classroom experience. The live captions are remarkably accurate, and the speaker identification means I always know who's talking. I finally feel like an equal participant in seminars.",
+      "As someone with moderate hearing loss, AURA has completely transformed my classroom experience. The live lecture captions are remarkably accurate, and the AI-generated notes mean I can actually participate in discussions instead of frantically trying to lip-read. I finally feel like an equal student.",
     badge: "Hearing Impairment",
   },
   {
     name: "James Okafor",
-    role: "Software Engineer, San Francisco",
+    role: "Computer Science Student, Stanford",
     avatar: "JO",
     avatarColor: "bg-blue-600",
     quote:
-      "I've been blind since birth and have used countless assistive tools. AURA's Vision Assist is genuinely different — it doesn't just tell me there's a person, it tells me where they are, what direction they're moving, and whether the path is clear. It's given me a new kind of independence.",
+      "I've been blind since birth and AURA's Vision Assist is a game-changer for my studies. It reads the whiteboard, describes diagrams in my textbooks, and even helps me navigate the lab. I went from needing a note-taker in every class to being fully independent.",
     badge: "Vision Impairment",
   },
   {
     name: "Dr. Priya Sharma",
-    role: "Accessibility Consultant, London",
+    role: "Director of Disability Services, UCLA",
     avatar: "PS",
     avatarColor: "bg-emerald-600",
     quote:
-      "I recommend AURA to every organization I work with. The Web Overlay feature alone is worth it — clients who previously found the web overwhelming can now browse confidently. The all-in-one approach solves the fragmentation problem I've seen for years.",
-    badge: "Accessibility Professional",
+      "We piloted AURA across three departments and the results were remarkable. Students with disabilities reported feeling 4x more confident in lectures. The AI note-taking alone replaced three separate tools we were paying for. This is the future of accessible education.",
+    badge: "Education Administrator",
   },
 ];
 
@@ -54,9 +54,9 @@ export function Testimonials() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          badge="Stories"
-          title="Real impact, real people"
-          subtitle="These are illustrative accounts representing the experiences of people who need accessible technology every day. AURA is designed for them."
+          badge="Student Stories"
+          title="Real students, real impact"
+          subtitle="These are illustrative accounts representing the experiences of students and educators who need accessible learning tools every day. AURA is designed for them."
           align="center"
           id="testimonials-heading"
           className="mb-4"

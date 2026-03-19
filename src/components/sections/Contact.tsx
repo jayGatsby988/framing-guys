@@ -17,23 +17,23 @@ const tabs: { id: Tab; label: string }[] = [
 ];
 
 const roles = [
-  "Individual User",
   "Student",
   "Educator / Professor",
-  "Healthcare Professional",
+  "Disability Services Staff",
+  "University Administrator",
   "Accessibility Consultant",
-  "Product Manager",
-  "Software Engineer",
-  "Executive / C-Suite",
+  "Parent / Guardian",
+  "School IT Staff",
+  "Researcher",
   "Other",
 ];
 
 const waitlistPerks = [
-  "Priority access before public launch",
-  "Lifetime Early Adopter pricing",
-  "Direct input on feature roadmap",
-  "Monthly product updates",
-  "Access to beta features first",
+  "Priority campus deployment before public launch",
+  "Free academic licenses for qualifying institutions",
+  "Direct input on our education feature roadmap",
+  "Monthly product updates and case studies",
+  "Access to beta features and pilot programs",
 ];
 
 interface FormData {
@@ -126,8 +126,8 @@ export function Contact() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           badge="Get Access"
-          title="Be among the first to experience AURA"
-          subtitle="Join thousands of people waiting to transform how they interact with the world."
+          title="Bring AURA to your campus"
+          subtitle="Join thousands of students, educators, and universities waiting to transform accessible education."
           align="center"
           id="contact-heading"
           className="mb-12"
@@ -416,7 +416,7 @@ export function Contact() {
                 </p>
               </div>
               <p className="text-xs text-[#5A5A6E] leading-relaxed">
-                Educators, engineers, researchers, and accessibility advocates from 40+ countries are already on the waitlist.
+                Students, professors, disability services directors, and accessibility advocates from 120+ universities are already on the waitlist.
               </p>
             </div>
 
