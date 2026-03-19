@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AURA</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      <span>AURA</span>
+    </div>
+    <button id="power-btn" class="power-btn" title="Enable/Disable AURA on this page">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+    </button>
+  </header>
+
+  <!-- Quick Actions Row 1 -->
+  <section class="quick-actions">
+    <button class="action-btn" id="btn-read-aloud" title="Read page aloud">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+      <span>Read Aloud</span>
+    </button>
+    <button class="action-btn" id="btn-simplify" title="Simplify page layout">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+      <span>Simplify</span>
+    </button>
+    <button class="action-btn" id="btn-captions" title="Start live captions">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+      <span>Captions</span>
+    </button>
+    <button class="action-btn" id="btn-dashboard" title="Open AURA Dashboard">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>Dashboard</span>
+    </button>
+  </section>
+
+  <!-- Quick Actions Row 2 -->
+  <section class="quick-actions">
+    <button class="action-btn" id="btn-reading-guide" title="Toggle reading guide ruler">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      <span>Read Guide</span>
+    </button>
+    <button class="action-btn" id="btn-summarize" title="Summarize page content">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <span>Summarize</span>
+    </button>
+    <button class="action-btn" id="btn-highlight-links" title="Highlight all links">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      <span>Links</span>
+    </button>
+    <button class="action-btn" id="btn-text-select" title="Select text to read aloud">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+      <span>Select TTS</span>
+    </button>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Text Controls -->
+  <section class="control-group">
+    <h3 class="group-title">Text & Reading</h3>
+    <div class="slider-row">
+      <label>Font Size</label>
+      <div class="slider-control">
+        <button class="step-btn" data-action="fontSize" data-dir="-1">−</button>
+        <span id="fontSize-value" class="slider-value">100%</span>
+        <button class="step-btn" data-action="fontSize" data-dir="1">+</button>
+      </div>
+    </div>
+    <div class="slider-row">
+      <label>Line Spacing</label>
+      <div class="slider-control">
+        <button class="step-btn" data-action="lineHeight" data-dir="-1">−</button>
+        <span id="lineHeight-value" class="slider-value">Normal</span>
+        <button class="step-btn" data-action="lineHeight" data-dir="1">+</button>
+      </div>
+    </div>
+    <div class="slider-row">
+      <label>Letter Spacing</label>
+      <div class="slider-control">
+        <button class="step-btn" data-action="letterSpacing" data-dir="-1">−</button>
+        <span id="letterSpacing-value" class="slider-value">Normal</span>
+        <button class="step-btn" data-action="letterSpacing" data-dir="1">+</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Visual Controls -->
+  <section class="control-group">
+    <h3 class="group-title">Visual</h3>
+    <div class="toggle-row">
+      <label>High Contrast</label>
+      <button class="toggle" id="toggle-contrast" role="switch" aria-checked="false"><span class="toggle-thumb"></span></button>
+    </div>
+    <div class="toggle-row">
+      <label>Dyslexia Font</label>
+      <button class="toggle" id="toggle-dyslexia" role="switch" aria-checked="false"><span class="toggle-thumb"></span></button>
+    </div>
+    <div class="toggle-row">
+      <label>Reduced Motion</label>
+      <button class="toggle" id="toggle-motion" role="switch" aria-checked="false"><span class="toggle-thumb"></span></button>
+    </div>
+    <div class="toggle-row">
+      <label>Large Cursor</label>
+      <button class="toggle" id="toggle-cursor" role="switch" aria-checked="false"><span class="toggle-thumb"></span></button>
+    </div>
+    <div class="toggle-row">
+      <label>Focus Highlights</label>
+      <button class="toggle" id="toggle-focus" role="switch" aria-checked="false"><span class="toggle-thumb"></span></button>
+    </div>
+    <div class="toggle-row">
+      <label>Hide Images</label>
+      <button class="toggle" id="toggle-images" role="switch" aria-checked="false"><span class="toggle-thumb"></span></button>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Education Tools -->
+  <section class="control-group">
+    <h3 class="group-title">Education Tools</h3>
+    <div class="toggle-row">
+      <label>Focus Mode</label>
+      <button class="toggle" id="toggle-focus-mode" role="switch" aria-checked="false"><span class="toggle-thumb"></span></button>
+    </div>
+    <div class="toggle-row">
+      <label>Highlight Headings</label>
+      <button class="toggle" id="toggle-headings" role="switch" aria-checked="false"><span class="toggle-thumb"></span></button>
+    </div>
+    <div class="toggle-row">
+      <label>Line Ruler</label>
+      <button class="toggle" id="toggle-ruler" role="switch" aria-checked="false"><span class="toggle-thumb"></span></button>
+    </div>
+    <div class="slider-row">
+      <label>TTS Speed</label>
+      <div class="slider-control">
+        <button class="step-btn" data-action="ttsSpeed" data-dir="-1">−</button>
+        <span id="ttsSpeed-value" class="slider-value">1.0x</span>
+        <button class="step-btn" data-action="ttsSpeed" data-dir="1">+</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Quick Notes -->
+  <section class="control-group">
+    <h3 class="group-title">Quick Notes</h3>
+    <textarea id="quick-notes" class="quick-notes-input" placeholder="Jot down notes while studying... Saved automatically." rows="3"></textarea>
+    <div class="notes-actions">
+      <button id="btn-copy-notes" class="notes-btn" title="Copy notes">Copy</button>
+      <button id="btn-clear-notes" class="notes-btn" title="Clear notes">Clear</button>
+      <button id="btn-send-dashboard" class="notes-btn primary" title="Send to AURA Dashboard">Send to Dashboard</button>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Color Filters -->
+  <section class="control-group">
+    <h3 class="group-title">Color Vision</h3>
+    <div class="color-btns">
+      <button class="color-btn active" data-filter="none">Default</button>
+      <button class="color-btn" data-filter="protanopia">Protanopia</button>
+      <button class="color-btn" data-filter="deuteranopia">Deuteranopia</button>
+      <button class="color-btn" data-filter="tritanopia">Tritanopia</button>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Reset -->
+  <section class="footer-actions">
+    <button id="btn-reset" class="reset-btn">Reset All Settings</button>
+  </section>
+
+  <script src="popup.js"></script>
+</body>
+</html>
