@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Eye, Mic, MessageSquare, Volume2, Accessibility, Settings,
+  Eye, MessageSquare, Volume2, Settings, BookOpen, Globe,
   ArrowRight, Clock, Sparkles, Activity, Camera, Send,
   GripVertical, X, Plus, LayoutGrid, Minimize2, Maximize2,
   ArrowUpRight, Zap, Shield, ChevronRight, EyeOff,
@@ -21,7 +21,7 @@ interface WidgetConfig {
 }
 interface ChatMsg { role: 'user' | 'assistant'; content: string }
 
-const WIDGET_IDS = ['stats', 'quick-actions', 'chat', 'vision', 'live-camera', 'activity', 'accessibility'] as const
+const WIDGET_IDS = ['stats', 'quick-actions', 'chat', 'vision', 'live-camera', 'activity', 'quick-settings'] as const
 type WidgetId = typeof WIDGET_IDS[number]
 
 const WIDGET_META: Record<WidgetId, { label: string; icon: typeof Eye; color: string }> = {
@@ -31,7 +31,7 @@ const WIDGET_META: Record<WidgetId, { label: string; icon: typeof Eye; color: st
   'vision': { label: 'Vision Assist', icon: Eye, color: '#8B5CF6' },
   'live-camera': { label: 'Live Camera', icon: Camera, color: '#EF4444' },
   'activity': { label: 'Activity Feed', icon: Clock, color: '#14B8A6' },
-  'accessibility': { label: 'Quick A11y', icon: Accessibility, color: '#F59E0B' },
+  'quick-settings': { label: 'Quick Settings', icon: Settings, color: '#64748B' },
 }
 
 function getDefaultLayout(): Record<WidgetId, WidgetConfig> {
@@ -65,12 +65,12 @@ function saveLayout(layout: Record<WidgetId, WidgetConfig>) {
 
 // ─── Helpers ──────────────────────────────────────────────
 const toolIcons: Record<string, typeof Eye> = {
-  vision: Eye, captions: Mic, chat: MessageSquare,
-  audio: Volume2, accessibility: Accessibility, settings: Settings,
+  vision: Eye, notes: BookOpen, chat: MessageSquare,
+  audio: Volume2, settings: Settings, extension: Globe,
 }
 const toolColors: Record<string, string> = {
-  vision: '#8B5CF6', captions: '#EC4899', chat: '#6366F1',
-  audio: '#14B8A6', accessibility: '#F59E0B', settings: '#64748B',
+  vision: '#8B5CF6', notes: '#10B981', chat: '#6366F1',
+  audio: '#14B8A6', settings: '#64748B', extension: '#A855F7',
 }
 
 function timeAgo(dateStr: string) {
@@ -369,7 +369,7 @@ export default function DashboardConsole() {
               <div className="grid grid-cols-3 gap-3">
                 {[
                   { label: 'Vision Scans', value: stats.vision, color: '#8B5CF6', icon: Eye },
-                  { label: 'Transcripts', value: stats.captions, color: '#EC4899', icon: Mic },
+                  { label: 'Lecture Notes', value: stats.captions, color: '#10B981', icon: BookOpen },
                   { label: 'Conversations', value: stats.chats, color: '#6366F1', icon: MessageSquare },
                 ].map(s => (
                   <div key={s.label} className="bg-white/[0.02] rounded-xl p-3 border border-white/[0.03]">
@@ -390,11 +390,11 @@ export default function DashboardConsole() {
               <div className="grid grid-cols-3 gap-2">
                 {[
                   { href: '/dashboard/vision', icon: Eye, label: 'Vision', gradient: 'from-purple-500 to-violet-600' },
-                  { href: '/dashboard/captions', icon: Mic, label: 'Captions', gradient: 'from-pink-500 to-rose-600' },
                   { href: '/dashboard/chat', icon: MessageSquare, label: 'Chat', gradient: 'from-indigo-500 to-blue-600' },
                   { href: '/dashboard/audio', icon: Volume2, label: 'Audio', gradient: 'from-teal-500 to-emerald-600' },
+                  { href: '/dashboard/notes', icon: BookOpen, label: 'Notes', gradient: 'from-emerald-500 to-green-600' },
                   { href: '/dashboard/live', icon: Camera, label: 'Live Cam', gradient: 'from-red-500 to-orange-600' },
-                  { href: '/dashboard/accessibility', icon: Accessibility, label: 'A11y', gradient: 'from-amber-500 to-orange-600' },
+                  { href: '/dashboard/extension', icon: Globe, label: 'Extension', gradient: 'from-violet-500 to-purple-600' },
                 ].map(tool => (
                   <Link
                     key={tool.href}
@@ -569,9 +569,9 @@ export default function DashboardConsole() {
             </WidgetShell>
           )}
 
-          {/* Accessibility Quick Controls Widget */}
-          {layout.accessibility.visible && (
-            <WidgetShell key="accessibility" id="accessibility" layout={layout} setLayout={l => { setLayout(l); saveLayout(l) }} fullLink="/dashboard/accessibility">
+          {/* Quick Settings Widget */}
+          {layout['quick-settings'].visible && (
+            <WidgetShell key="quick-settings" id="quick-settings" layout={layout} setLayout={l => { setLayout(l); saveLayout(l) }} fullLink="/dashboard/settings">
               <div className="space-y-3">
                 {/* Font Size */}
                 <div className="flex items-center justify-between">
@@ -619,8 +619,8 @@ export default function DashboardConsole() {
           <h3 className="text-sm font-semibold text-white mb-0.5">AURA Chrome Extension</h3>
           <p className="text-[11px] text-white/30">Use AURA&apos;s accessibility tools on any website. Controls text, contrast, captions, and more.</p>
         </div>
-        <Link href="/install" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-500/15 border border-indigo-500/25 text-indigo-300 text-[11px] font-medium hover:bg-indigo-500/25 transition-all flex-shrink-0">
-          Install <ChevronRight className="w-3 h-3" />
+        <Link href="/dashboard/extension" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-500/15 border border-indigo-500/25 text-indigo-300 text-[11px] font-medium hover:bg-indigo-500/25 transition-all flex-shrink-0">
+          Configure <ChevronRight className="w-3 h-3" />
         </Link>
       </div>
     </div>

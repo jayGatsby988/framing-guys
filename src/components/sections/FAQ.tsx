@@ -10,7 +10,7 @@ const faqs = [
   {
     question: "What is AURA?",
     answer:
-      "AURA (Adaptive Universal Responsive Assistant) is an AI-powered accessibility platform that combines six core tools: Vision Assist (real-time scene understanding), Live Captions (speech transcription), Audio Tools (audio-to-text processing), Web Overlay (instant website accessibility improvements), Voice Control (natural language navigation), and an AI Companion (conversational assistant). Together, they create a unified accessibility layer for both digital and physical environments.",
+      "AURA (Adaptive Universal Real-time Accessibility) is an AI-powered accessibility platform that combines six core tools: Vision Assist (real-time scene understanding), Live Captions (speech transcription), Audio Tools (audio-to-text processing), Web Overlay (instant website accessibility improvements), Voice Control (natural language navigation), and an AI Companion (conversational assistant). Together, they create a unified accessibility layer for both digital and physical environments.",
   },
   {
     question: "How does the Vision Assist feature work?",

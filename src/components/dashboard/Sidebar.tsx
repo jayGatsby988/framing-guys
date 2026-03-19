@@ -5,20 +5,19 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Eye, Mic, MessageSquare, Volume2, Accessibility, Settings,
-  LayoutDashboard, ChevronLeft, ChevronRight, Sparkles, Menu, X, Camera, LogOut, BookOpen
+  Eye, MessageSquare, Volume2, Settings,
+  LayoutDashboard, ChevronLeft, ChevronRight, Sparkles, Menu, X, Camera, LogOut, BookOpen, Globe
 } from 'lucide-react'
 import { createSupabaseBrowser } from '@/lib/supabase-browser'
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', color: '#6366F1' },
   { href: '/dashboard/vision', icon: Eye, label: 'Vision Assist', color: '#8B5CF6' },
-  { href: '/dashboard/captions', icon: Mic, label: 'Live Captions', color: '#EC4899' },
   { href: '/dashboard/chat', icon: MessageSquare, label: 'AI Assistant', color: '#6366F1' },
   { href: '/dashboard/audio', icon: Volume2, label: 'Audio Tools', color: '#14B8A6' },
   { href: '/dashboard/notes', icon: BookOpen, label: 'Lecture Notes', color: '#10B981' },
   { href: '/dashboard/live', icon: Camera, label: 'Live Camera', color: '#EF4444' },
-  { href: '/dashboard/accessibility', icon: Accessibility, label: 'Accessibility', color: '#F59E0B' },
+  { href: '/dashboard/extension', icon: Globe, label: 'Extension', color: '#A855F7' },
   { href: '/dashboard/settings', icon: Settings, label: 'Settings', color: '#64748B' },
 ]
 
@@ -54,7 +53,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
         {!collapsed && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <span className="text-lg font-bold text-white tracking-tight">AURA</span>
-            <p className="text-[10px] text-white/40 -mt-0.5">Accessibility Platform</p>
+            <p className="text-[10px] text-white/40 -mt-0.5">Adaptive Universal Real-time Accessibility</p>
           </motion.div>
         )}
       </div>

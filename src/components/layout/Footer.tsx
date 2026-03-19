@@ -90,8 +90,7 @@ export function Footer() {
             </button>
 
             <p className="text-[#9898A8] text-sm leading-relaxed mb-6 max-w-xs">
-              Adaptive Universal Responsive Assistant. One intelligent layer for a
-              more accessible world.
+              <span className="text-white/70 font-medium">A</span>daptive <span className="text-white/70 font-medium">U</span>niversal <span className="text-white/70 font-medium">R</span>eal-time <span className="text-white/70 font-medium">A</span>ccessibility — the ultimate education platform for impaired students.
             </p>
 
             {/* Accessibility Commitment */}
